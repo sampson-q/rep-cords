@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS person(
     class VARCHAR(6) NOT NULL,
     program_type VARCHAR(20) NOT NULL,
     user_level INT(3) NOT NULL,
-    student_email VARCHAR(100) NOT NULL UNIQUE,
+    student_email VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS users(
