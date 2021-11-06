@@ -1,3 +1,3 @@
-# node-tb45rb
+# rep-cords
 
-[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/node-tb45rb)
+Representative Records (for long): aid in records keeping for course reps, etc
