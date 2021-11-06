@@ -1,0 +1,190 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 09-Mar-2018, 11:00:09
+    Author     : ARTLIB
+*/
+
+*{
+    margin: 0;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Tahoma";
+}
+
+div#header{
+    width: 100%;
+    height: 70px;
+    background-color: #008975;
+    margin: 0 auto;
+}
+
+.nav-wrapper{
+    background-color: #008975;
+}
+
+a{
+    text-decoration: none;
+}
+
+.logo{
+    float: left;
+    margin-top: 8px;
+    margin-left: 15px;
+}
+
+.logo a{
+    font-size: 1.6em;
+    color: #B1964F;
+
+}
+
+.logo a:hover{
+    text-decoration: none;
+}
+
+.logo span:first-child img{
+    width: 50px;
+    height: 30px;
+}
+
+.logo a span{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#customer_login{
+    height: 100%;
+    width: auto;
+    float: right;
+    margin-top: 12px;
+    margin-right: 15px;
+}
+
+#customer_login a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+}
+
+#customer_login table td{
+    padding: 5px;
+}
+
+#customer_login table td label{
+    color: #ffffff;
+}
+.logout{
+    float: right;
+    margin-top: 12px;
+    margin-right: 15px;
+}
+
+.logout span{
+    color: #fff;
+}
+
+.logout #uname{
+    margin-right: 20px;
+}
+
+.logout span a{
+    text-decoration: none;
+    color: #fff;
+}
+
+#container{
+    width: 100%;
+    margin: 0 auto;
+    background-color: #95a5a6;
+}
+
+#content{
+    width: 70%;
+    height: 100%;
+    padding: 15px;
+    margin: 0 auto;
+    
+}
+
+div.box{
+    margin-top: 15px;
+}
+
+.box-top{
+    color: #fff;
+    text-shadow: 0px 1px 1px solid #000;
+    background-color: #008975;
+    padding: 5px;
+    padding-left: 15px;
+    font-weight: 300;
+}
+
+div.box .box-panel{
+    padding: 15px;
+    background-color: #fff;
+    color: #333;
+    height: auto;
+}
+
+#billing_area{
+    border: 1px solid black;
+    width: 46%;
+    height: 80%;
+    border-radius: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.form_top{
+    height: 60px;
+    border-bottom: 1px solid #000;
+    margin-bottom: 7px;
+}
+
+#notification_area{
+    display: inline-block;
+    border: 1px solid #000;
+    vertical-align: top;
+    border-radius: 10px;
+    float: right;
+}
+
+.flash {
+   animation: blink 1s linear infinite;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-play-state: running;
+}
+
+@keyframes flash {
+    from {color: red;}
+    to {color: black;}
+}
+
+@keyframes blink{
+0%{opacity: 0;}
+50%{opacity: .5;}
+100%{opacity: 1;}
+}
+
+#notification_div{
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 15%;
+}
+
+#notification_div p{
+    font-family: comic sans ms;
+    color: #008975;
+    font-size: 18px;
+    font-weight: bolder
+}

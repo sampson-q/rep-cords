@@ -1,0 +1,95 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 13-Apr-2018, 13:24:33
+    Author     : ARTLIB
+*/
+*{
+    margin: 0;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Tahoma";
+    background-color: #fff;
+}
+
+nav span img {
+    width: 50px;
+    height: 30px;
+}
+
+
+.nav-wrapper{
+    background-color: #008975;
+}
+
+#brand_name{
+    font-family: Tahoma;
+    font-size: 30px;
+    line-height: 60px;
+    font-weight: bold;
+}
+
+.sidenav-fixed{
+    z-index:980;
+    background-color: #00BF9A;
+}
+
+ul#nav li{
+    list-style: none;
+}
+
+ul#nav li a:first-of-type{
+    border-top: #ffffff;
+}
+
+ul#nav li a{
+    color: #ffffff;
+    font-size: 1.2em;
+    font-weight: normal;
+    padding: 10px;
+    display: block;
+    text-decoration: none;
+    border-bottom: 2px solid #ffffff;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
+}
+
+
+
+ul#nav li a:hover{
+    background-color: #008975;
+    color: #fff;
+}
+
+ul#nav li a.selected{
+    background-color: #fff;
+    color: #008975;
+    font-size: 25px;
+}
+
+.sidebar{
+    margin-top: 64px;
+}
+
+iframe{
+    width: 100%;
+    display: none;
+    margin: 0 auto;
+}
+
+#iframe-top{
+    height: 50px;
+    display: none;
+}
+
+#cont{
+    margin: 0 auto;
+}

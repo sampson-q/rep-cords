@@ -1,0 +1,23 @@
+body {
+    background-image: url('../imgs/alex-tXYg4Zx7kSU-unsplash.jpg');
+    background-size: 100%;
+    background-color: black;
+}
+
+#idd {
+    font-size: 50px;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+.alert, .close {
+    line-height: 1px;
+    margin-top: -5px;
+}
+
+label {
+    color: white;
+}

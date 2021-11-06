@@ -1,0 +1,266 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 11-Feb-2018, 12:02:28
+    Author     : ESTHER
+*/
+
+*{
+    margin: 0;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Tahoma";
+    background-color: #95a5a6;
+}
+
+div#header{
+    width: 100%;
+    height: 50px;
+    background-color: #008975;
+    margin: 0 auto;
+}
+
+a{
+    text-decoration: none;
+}
+
+.logo{
+    float: left;
+    margin-top: 8px;
+    margin-left: 15px;
+}
+
+.logo a{
+    font-size: 1.6em;
+    color: #B1964F;
+    
+}
+
+.logo a:hover{
+    text-decoration: none;
+}
+
+.logo span:first-child img{
+    width: 50px;
+    height: 30px;
+}
+
+.logo a span{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logout{
+    float: right;
+    margin-top: 12px;
+    margin-right: 15px;
+}
+
+.logout span{
+    color: #fff;
+}
+
+.logout #uname{
+    margin-right: 20px;
+}
+
+.logout span a{
+    text-decoration: none;
+    color: #fff;
+}
+
+div#container{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.sidebar{
+    width: 250px;
+    height: 100%;
+    float: left;
+    background-color: #00BF9A;  
+}
+
+ul#nav{
+    
+}
+
+ul#nav li{
+    list-style: none;
+}
+
+ul#nav li a:first-of-type{
+    border-top: #ffffff;
+}
+
+ul#nav li a{
+    color: #ffffff;
+    font-size: 1.2em;
+    font-weight: normal;
+    padding: 10px;
+    display: block;
+    text-decoration: none;
+    border-bottom: 2px solid #ffffff;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
+}
+
+
+
+ul#nav li a:hover{
+    background-color: #778899;
+    color: #fff;
+}
+
+ul#nav li a.selected{
+    background-color: #95a5a6;
+    color: #fff;
+}
+
+.content{
+    width: auto;
+    height: 100%;
+    margin-left: 250px;
+    background-color: #95a5a6;
+    padding: 15px;
+}
+.content p{
+   color: #424242;
+   font-size: 0.73em;
+}
+
+div.box{
+    margin-top: 15px;
+}
+
+div.box .box-top{
+    color: #fff;
+    text-shadow: 0px 1px 1px solid #000;
+    background-color: #009688;
+    padding: 5px;
+    padding-left: 15px;
+    font-weight: 300;
+}
+
+div.box .box-panel{
+    padding: 15px;
+    background-color: #fff;
+    color: #333;
+    height: auto;
+}
+
+div#add_user_area{
+    display: none;
+}
+
+div#delete_user_area{
+    display: none;
+}
+
+div#account_reset_area{
+    display: none;
+}
+
+.sticky:before,
+.sticky:after {
+    content: '';
+    display: table;
+}
+
+.form_labels{
+    width: 150px;
+    padding: 5px;
+}
+
+.admin{
+    width: 190px;
+    padding: 5px;
+}
+
+.form_inputs{
+    width: 300px;
+    padding: 5px;
+}
+
+#user_delete_table tr td{
+    width: 200px;
+}
+
+#user_delete_table tr td#address_column{
+    width: 300px;
+}
+
+#user_delete_table tr td#button_column{
+    padding-left: 50px;
+    width: 50px;
+}
+
+#ceo_transactions_area{
+    display: none;
+}
+
+#ceo_card_application_area{
+    display: none;
+}
+
+#ceo_report_area{
+    display: none;
+}
+
+#ceo_account_settings_area{
+    display: none;
+}
+
+#change_admin_password{
+    display: none;
+}
+
+#employee_transactions_area{
+    display: none;
+}
+
+#employee_card_application_area{
+    display: none;
+}
+
+#employee_report_area{
+    display: none;
+}
+
+#ceo_add_card_company{
+    display: none; 
+    font-family: comic sans ms; 
+    color: greenyellow; 
+    font-size: 10px;
+}
+
+#ceo_add_questions{
+    display: none; 
+    font-family: comic sans ms; 
+    color: greenyellow; 
+    font-size: 10px;
+}
+
+#ceo_questions_area{
+    display: none;
+}
+
+#ceo_card_company_area{
+    display: none;
+}
+
+#header_display{
+    font-size: 25px;
+}
+
+.btn-floating{
+    background-color: #008975;
+}
