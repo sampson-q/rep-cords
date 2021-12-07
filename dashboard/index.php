@@ -11,8 +11,6 @@
 ?>
 
 <!DOCTYPE html>
-
-<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -57,7 +55,7 @@
         
         <div id="DashHome" class="container-fluid col-xs-6" style="margin-top: 50px;">
             <div id="viewclass" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
-                My Class
+                My Classes
             </div>
 
             <div class="col-xs-1" align="center"></div>
@@ -68,24 +66,25 @@
 
             <div class="col-xs-1" align="center"></div>
 
-            <div id="createclassbutton" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
-                Create Class
+            <div id="button" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                View Classes
             </div>
         </div>
 
-        <div style="display: none;" class="container-fluid col-xs-6" id="CreateClassForm">
+        <div style="display: none;" class="container-fluid col-xs-6" id="AddClassForm">
             <form role="form">
                 <div class="form-group">
                     <label for="classname">Class Name:</label>
-                    <input type="text" class="form-control" id="classname" placeholder="Enter Class Name" name="classname" required>
+                    <input type="text" class="form-control" id="addclassname" placeholder="Enter Class Name" name="addclassname" required>
                 </div>
-                <input type="submit" class="form-control btn btn-primary" value="Create Class" id="createclass_button" name="createclass_button"/>
+                <input type="submit" class="form-control btn btn-primary" value="Add Class" id="addclassbutton" name="addclassbutton"/>
             </form>
         </div>
 
         <script src="../js/index.js"></script>
         <script src="../js/jquery.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
+        <script src="index.js"></script>
     
     </body>
 </html>
