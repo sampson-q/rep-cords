@@ -16,6 +16,7 @@
     require_once '../models/Account.php';
     require_once 'DatabaseConnection.php';
     require_once '../models/Person.php';
+    require_once '../models/AddClass.php';
 
     class CrudOperation {
         private $hostname;
@@ -165,6 +166,20 @@
                 return true;
             } catch (Exception $e) {
                 //die('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function AddClass(AddClass $AddClass) {
+            try {
+                $query = $this -> connection -> prepare('CREATE TABLE `repnotes`.`:classname` ( `sn` INT(10) NOT NULL AUTO_INCREMENT , `studentname` VARCHAR(50) NOT NULL , `stuentid` VARCHAR(10) NOT NULL , PRIMARY KEY (`sn`), UNIQUE `studentid` (`stuentid`))');
+
+                $query -> execute([
+                    'classname' => $AddClass -> getClassName()
+                ]);
+
+                return true;
+            } catch (Exception $e) {
+                echo 'Class already Exist! ';
             }
         }
     }
