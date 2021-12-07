@@ -1,42 +1,52 @@
 // dashboard js
 
 (function () {
-    // function to switch to create-new-class form
-    var CreateClassButton = document.getElementById('createclassbutton');
-        if (CreateClassButton) {
-            CreateClassButton.addEventListener('click', function () {
-                swapView('dashHome', 'CreateClassForm');
-            });
-        }
 
-        // function helps to submit class name for new class creation
-        var SubmitClassName = document.getElementById('createclass_button');
-        if (SubmitClassName) {
-            SubmitClassName.addEventListener('click', function () {
-                var className = document.getElementById('classname').value;
-                if (className !== '') {
-                    $.ajax({
-                        url: '../controllers/DashBoard.php',
-                        method: 'POST',
-                        data: {classname: className},
-                        complete: function (feed) {
-                            if (feed.responseText === 'class_success') {
-                                alert("Class Created")
-                            }
+    let swapView = (container0, container1) => {
+        document.getElementById(container0).style = "display: none;";
+        document.getElementById(container1).style = "display: block;";
+    }
 
-                            if (feed.responseText === 'class_error') {
-                                alert('class not created');
-                            }
 
-                            if (feed.responseText == 'empty_class_name') {
-                                alert("Provide Class Name!");
-                            }
+    // function to switch to add-new-class form
+    var ViewAddClass = document.getElementById('addclass');
+    if (ViewAddClass) {
+        ViewAddClass.addEventListener('click', function () {
+            swapView('DashHome', 'AddClassForm')
+        })
+    }
+
+    // function adds a class
+    var AddClassButton = document.getElementById('addclassbutton');
+    if (AddClassButton) {
+        AddClassButton.addEventListener('click', function () {
+            var ClassName = document.getElementById('addclassname').value;
+            
+            if (ClassName != '') {
+                $.ajax({
+                    url: '../controllers/DashBoard.php',
+                    method: 'POST',
+                    data: {classname: ClassName},
+                    complete: function (feedback) {
+                        if (feedback.responseText === 'class_added') {
+                            alert('Class Added!');
                         }
-                    });
-                } else {
-                    alert("Empty Field! Provide class name!");
-                }
-            });
-        }
+
+                        if (feedback.responseText === 'add_class_error') {
+                            alert('Class Error!');
+                        }
+                        
+                        if (feedback.responseText === 'Class already Exist! add_class_error') {
+                            alert('Class Already Exist!');
+                        }
+
+                        //alert(feedback);
+                    }
+                });
+            } else {
+                alert('Provide Class Name!');
+            }
+        });
+    }
 
 })();
