@@ -167,26 +167,4 @@
                 //die('Error: ' . $e -> getMessage());
             }
         }
-
-        public function createClassesTable() {
-            try {
-                $query = $this -> connection -> prepare('CREATE TABLE `repnotes`.`new_table` ( `id` INT(10) NOT NULL AUTO_INCREMENT , `class_name` VARCHAR(200) NOT NULL , PRIMARY KEY (`id`), UNIQUE `class_name` (`class_name`(200))) ENGINE = InnoDB;');
-
-            } catch (Exception $e) {
-                // die
-            }
-        }
-
-        public function addClass($classname) {
-            try {
-                $query = $this -> connection -> prepare("CREATE TABLE IF NOT EXISTS :classname(id INTEGER AUTO_INCREMENT PRIMARY KEY, studentname VARCHAR(90) NOT NULL, studentid VARCHAR(10) NOT NULL UNIQUE)");
-                $query -> execute([
-                    'classname' => $classname
-                ]);
-
-                return true;
-            } catch (Exception $e) {
-                // die
-            }
-        }
     }

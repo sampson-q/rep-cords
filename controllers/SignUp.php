@@ -55,7 +55,7 @@
             else {
                 if ($crud -> savePersonDetails($person)) {
                     if ($crud -> createAccount($account)) {
-                        $crud -> createClassesTable();
+                        //$crud -> createClassesTable();
                         $_SESSION['signup_success'] = 1;
                         $_SESSION['signup_issue'] = '';
 
