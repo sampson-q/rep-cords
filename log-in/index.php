@@ -1,5 +1,6 @@
 <?php
     session_start();
+    error_reporting(E_ERROR | E_PARSE);
 
     if (!empty($_SESSION['login_success']) && $_SESSION['login_success'] == 1) {
         $_SESSION['login_issue'] = '<div class="alert alert-danger alert-dismissible">
