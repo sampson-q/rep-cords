@@ -229,11 +229,6 @@
         return true;
     };
 
-    let swapView = (container0, container1) => {
-        document.getElementById(container0).style = "display: none;";
-        document.getElementById(container1).style = "display: block;";
-    }
-
     // button helps to add a new class
     var AddClassButton = document.getElementById('addclass');
     if (AddClassButton) {
