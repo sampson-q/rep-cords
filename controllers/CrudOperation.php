@@ -182,4 +182,16 @@
                 echo 'Class already Exist! ';
             }
         }
+
+        public function AddClassDetails($classname) {
+            try {
+                $query = $this -> connection -> prepare('INSERT INTO `all_class` (`id`, `student_id`, `class_names`) VALUES (NULL, :student_id, :class_name)');
+                $query -> execute([
+                    'student_id' => $_SESSION['student_id'],
+                    'class_name' => $classname
+                ]);
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
     }
