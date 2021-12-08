@@ -10,6 +10,7 @@
 
         $crud = new CrudOperation();
         if ($crud -> AddClass($AddClass)) {
+            $crud -> AddClassDetails($classname);
             echo 'class_added';
         } else {
             echo 'add_class_error';
