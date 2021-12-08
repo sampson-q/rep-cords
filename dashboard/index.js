@@ -8,12 +8,30 @@
     }
 
 
+    // view home of dashboard
+    var HomeButton = document.getElementById('home');
+    if (HomeButton) {
+        HomeButton.addEventListener('click', function () {
+            document.getElementById('ViewClassPage').style = "display: none";
+            document.getElementById('AddClassForm').style = "display: none";
+        });
+    }
+
     // function to switch to add-new-class form
-    var ViewAddClass = document.getElementById('addclass');
-    if (ViewAddClass) {
-        ViewAddClass.addEventListener('click', function () {
+    var AddClassPage = document.getElementById('addclass');
+    if (AddClassPage) {
+        AddClassPage.addEventListener('click', function () {
             swapView('DashHome', 'AddClassForm')
-        })
+        });
+    }
+
+
+    // function to views all classes for the user
+    var ViewClassPage = document.getElementById('viewclass');
+    if (ViewClassPage) {
+        ViewClassPage.addEventListener('click', function () {
+            swapView('DashHome', 'ViewClassPage');
+        });
     }
 
     // function adds a class
@@ -35,7 +53,7 @@
                         if (feedback.responseText === 'add_class_error') {
                             alert('Class Error!');
                         }
-                        
+
                         if (feedback.responseText === 'Class already Exist! add_class_error') {
                             alert('Class Already Exist!');
                         }
@@ -48,5 +66,4 @@
             }
         });
     }
-
 })();

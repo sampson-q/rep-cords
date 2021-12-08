@@ -26,6 +26,7 @@ class DatabaseConnection {
         try {
             $connection = new PDO("mysql:host=" . $this -> host . ";dbname=repnotes", "" . $this -> username . "", "" . $this -> password);
             $connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
             return $connection;
         } catch (Exception $e) {
             die("Error: " . $e -> getMessage());

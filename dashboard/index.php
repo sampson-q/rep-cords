@@ -7,7 +7,7 @@
         echo '<script>window.location.href = "../index.php";</script>';
     }
 
-    include_once "../controllers/DatabaseConnection.php";
+    //include_once "../controllers/DatabaseConnection.php";
 ?>
 
 <!DOCTYPE html>
@@ -20,6 +20,7 @@
         <link href="../css/index.css" rel="stylesheet" type="text/css" />
         <link href="index.css" rel="stylesheet" type="text/css" />
         <link href="../css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="../css/bootstrap.min.css" />
         <link href="material-icons-0.2.1/iconfont/material-icons.css" rel="stylesheet" type="text/css"/>
         <link href="node_modules/@material/fab/dist/mdc.fab.min.css" rel="stylesheet" type="text/css"/>
@@ -31,7 +32,7 @@
                 <a class="navbar-brand" href="../dashboard">rep-cords.com</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li id="home"><a href="../dashboard" class="active"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;Home</a></li>
+                <li id="home"><a href="" class="active"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;Home</a></li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $_SESSION['student_id']; ?>
@@ -54,8 +55,8 @@
         <div class="col-xs-3"></div>
         
         <div id="DashHome" class="container-fluid col-xs-6" style="margin-top: 50px;">
-            <div id="viewclass" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
-                My Classes
+            <div id="button" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                Null for Now
             </div>
 
             <div class="col-xs-1" align="center"></div>
@@ -66,8 +67,8 @@
 
             <div class="col-xs-1" align="center"></div>
 
-            <div id="button" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
-                View Classes
+            <div id="viewclass" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                View Class
             </div>
         </div>
 
@@ -81,10 +82,47 @@
             </form>
         </div>
 
+        <div style="display: none;" class="container-fluid col-xs-6" id="ViewClassPage">
+        
+        <div class="row">
+            <h2>Attendance</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>S/N.</th>
+                        <th>Student Name</th>
+                        <th>Student ID</th>
+                    </tr>
+                </thead>
+  
+                <tbody>
+                    <?php 
+                           include_once('../controllers/DatabaseConnection.php');
+                           $a=1;
+                           $stmt = $conn->prepare("SELECT * FROM studentrecord");
+                           $stmt->execute();
+                           $users = $stmt->fetchAll();
+                           foreach($users as $user) {  
+                    ?>
+                    <tr>
+                        <td> <?php echo $user['id']; ?> </td>
+                        <td> <?php echo $user['student_name']; ?> </td>
+                        <td> <?php echo $user['student_id']; ?> </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+  
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </div>
+            <h3 style="color: white;">Your Classes will show here if you have any!</h3>
+        </div>
+
         <script src="../js/index.js"></script>
-        <script src="../js/jquery.min.js"></script>
-        <script src="../js/bootstrap.min.js"></script>
         <script src="index.js"></script>
-    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </body>
 </html>

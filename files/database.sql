@@ -21,6 +21,13 @@ CREATE TABLE IF NOT EXISTS users(
     CONSTRAINT uid FOREIGN KEY(student_id) REFERENCES person(id) ON UPDATE CASCADE
 );
 
+CREATE TABLE `repnotes`.`all_class` (
+    `id` INT(10) NOT NULL AUTO_INCREMENT,
+    `student_id` VARCHAR(10) NOT NULL,
+    `class_names` VARCHAR(60) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE `class_names` (`class_names`));
+
 CREATE TABLE IF NOT EXISTS securityQuestions(
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(10) NOT NULL UNIQUE,
