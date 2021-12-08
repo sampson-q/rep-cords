@@ -1,5 +1,40 @@
-SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that
-corresponds to your MariaDB server version for the right syntax to use near ''8989@gmail.cmo'(id INTEGER AUTO_INCREMENT
-PRIMARY KEY, class_ids VARCHAR(10)...' at line 1
+<?php
+                            $db = new DatabaseConnection('localhost', 'root', '');
+                            $connection = $db->ConnectDB();
+                            $query = $connection->prepare("SELECT DISTINCT recorded_year, recorded_month FROM payment WHERE userId = :userId ORDER BY recorded_datetime ASC");
+                            $query->execute([
+                                'userId' => $_SESSION['user_id']
+                            ]);
 
-// current objective is to automatically create a class table for any user after successful signup
+                            if ($query->rowCount() > 0) {
+                                ?>
+                                <table class="table table-responsive table-bordered">
+                                    <caption style="text-align: center;">All Recorded Expenses</caption>
+
+                                    <?php
+                                    $counter = 1;
+                                    while ($result = $query->fetch()) {
+                                        ?>
+                                    <form class="form-horizontal" role = "form" method="POST" action="views/monthly_expenses.php" target="_blank">
+                                            <input type="hidden" value="<?php echo $result['recorded_month']; ?>" name="month"/>
+                                            <input type="hidden" value="<?php echo $result['recorded_year']; ?>" name="year"/>
+                                            <tr>
+                                                <td><?php echo $counter; ?></td>
+                                                <td><?php echo $result['recorded_year']; ?></td>
+                                                <td><?php echo $result['recorded_month']; ?></td>
+                                                <td>
+                                                    <input type="submit" class="form-control btn btn-success" value="View" />
+                                                </td>
+                                            </tr>
+
+                                        </form>
+                                        <?php
+                                        $counter += 1;
+                                    }
+                                    ?>
+                                </table>
+                                <?php
+                            } else {
+                                echo 'No petty cash expenses recorded yet';
+                            }
+                            ?>
