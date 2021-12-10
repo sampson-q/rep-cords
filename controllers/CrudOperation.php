@@ -169,17 +169,37 @@
             }
         }
 
+        public function isClassExists($classname) {
+            try {
+                $query = $this -> connection -> prepare("SELECT * FROM all_class WHERE student_id = :student_id");
+                $query -> execute([
+                    'student_id' => $_SESSION['student_id']
+                ]);
+
+                if ($query -> rowCount() > 0) {
+                    while ($result = $query -> fetch()) {
+                        if ($result['class_names'] == $classname) {
+                            return false;
+                        }
+                    }
+                }
+                
+                return true;
+            } catch (Exception $e) {
+                die('Error: ' . $e -> getMessage());
+            }
+        }
+
         public function AddClass(AddClass $AddClass) {
             try {
-                $query = $this -> connection -> prepare('CREATE TABLE `repnotes`.`:classname` ( `sn` INT(10) NOT NULL AUTO_INCREMENT , `studentname` VARCHAR(50) NOT NULL , `stuentid` VARCHAR(10) NOT NULL , PRIMARY KEY (`sn`), UNIQUE `studentid` (`stuentid`))');
-
+                $query = $this -> connection -> prepare('CREATE TABLE `repnotes`.`:classname` ( `sn` INT(10) NOT NULL AUTO_INCREMENT , `studentname` VARCHAR(50) NOT NULL , `studentid` VARCHAR(10) NOT NULL , PRIMARY KEY (`sn`), UNIQUE `studentid` (`studentid`))');
                 $query -> execute([
                     'classname' => $AddClass -> getClassName()
                 ]);
 
                 return true;
             } catch (Exception $e) {
-                echo 'Class already Exist! ';
+                //
             }
         }
 
@@ -189,6 +209,52 @@
                 $query -> execute([
                     'student_id' => $_SESSION['student_id'],
                     'class_name' => $classname
+                ]);
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function RemoveClass($tablename, $classname) {
+            try {
+                $removetablequery = $this -> connection -> prepare('DROP TABLE IF EXISTS `repnotes`.`:classremove`');
+                $removetablequery -> execute([
+                    'classremove' => strtolower($tablename)
+                ]);
+
+                $removefromlistquery = $this -> connection -> prepare('DELETE FROM all_class WHERE student_id = :student_id AND class_names = :class_names');
+                $removefromlistquery -> execute([
+                    'student_id' => strtoupper($_SESSION['student_id']),
+                    'class_names' => $classname
+                ]);
+
+                return true;
+            } catch (Exception $e) {
+                die ('Error ' . $e -> getMessage());
+            }
+        }
+
+        public function isMemberExist($memberid, $classname) {
+            try {
+                $query = $this -> connection -> prepare('SELECT * FROM '. $classname .' WHERE studentid = ' . $memberid);
+
+                if ($query -> rowCount() > 0) {
+                    return false;
+                }
+
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function AddClassMember($studentid, $studentname, $studentclass) {
+            try {
+                $query = $this -> connection -> prepare('INSERT INTO `:student_class` (`sn`, `studentname`, `studentid`) VALUES (NULL, :student_name, :student_id)');
+                $query -> execute([
+                    'student_class' => $studentclass,
+                    'student_name' => $studentname,
+                    'student_id' => $studentid
                 ]);
             } catch (Exception $e) {
                 die ('Error: ' . $e -> getMessage());

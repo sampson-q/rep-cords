@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE `repnotes`.`all_class` (
     `id` INT(10) NOT NULL AUTO_INCREMENT,
     `student_id` VARCHAR(10) NOT NULL,
-    `class_names` VARCHAR(60) NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE `class_names` (`class_names`));
+    `class_names` VARCHAR(50) NOT NULL,
+    PRIMARY KEY (`id`)
+);
 
 CREATE TABLE IF NOT EXISTS securityQuestions(
     id INTEGER AUTO_INCREMENT PRIMARY KEY,

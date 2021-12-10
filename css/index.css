@@ -21,3 +21,11 @@ a {
 label {
     color: white;
 }
+
+#tableButton {
+    height: 120px;
+}
+
+#alert-box {
+    margin-top: 80px;
+}

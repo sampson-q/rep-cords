@@ -31,6 +31,11 @@
     if (ViewClassPage) {
         ViewClassPage.addEventListener('click', function () {
             swapView('DashHome', 'ViewClassPage');
+            $.ajax({
+                url: 'index.php',
+                method: 'POST', 
+                data: {DisplayClasses: 'DisplayClass'}
+            });
         });
     }
 
@@ -51,19 +56,26 @@
                         }
 
                         if (feedback.responseText === 'add_class_error') {
-                            alert('Class Error!');
+                            alert('Class Error! Class may already exist.');
                         }
 
-                        if (feedback.responseText === 'Class already Exist! add_class_error') {
+                        if (feedback.responseText === 'class_exists') {
                             alert('Class Already Exist!');
                         }
 
-                        //alert(feedback);
+                        //alert(feedback.responseText);
                     }
                 });
             } else {
                 alert('Provide Class Name!');
             }
+        });
+    }
+
+    var ClassAdd = document.getElementById('classadd');
+    if (ClassAdd) {
+        ClassAdd.addEventListener('click', function () {
+            swapView('ViewClassPage', 'AddClassForm')
         });
     }
 })();
