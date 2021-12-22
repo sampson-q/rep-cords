@@ -260,4 +260,95 @@
                 die ('Error: ' . $e -> getMessage());
             }
         }
+
+        public function UpdateMemberDetails($classforupdate, $studentname, $studentid, $recordforupdate) {
+            try {
+                $query = $this -> connection -> prepare("UPDATE `repnotes`.`:classname` SET `studentname` = :studentname, `studentid` = :studentid WHERE `:classname`.`sn` = :r");
+                $query -> execute([
+                    'classname' => $classforupdate,
+                    'studentname' => $studentname,
+                    'studentid' => $studentid,
+                    'r' => $recordforupdate
+                ]);
+
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function RemoveMemberDetails($class4remove, $record4remove) {
+            try {
+                $query = $this -> connection -> prepare('DELETE FROM `repnotes`.`:class4remove` WHERE `:class4remove`.`sn` = :record');
+                $query -> execute([
+                    'class4remove' => $class4remove,
+                    'record' => $record4remove
+                ]);
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function UnshareClass($class4unshare) {
+            try {
+                $query = $this -> connection -> prepare('DELETE FROM `repnotes`.`shared_classes` WHERE `shared_classes`.`id` = :unshare');
+                $query -> execute([
+                    'unshare' => $class4unshare
+                ]);
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function ShareClass($ShareTo, $ToShare) {
+            try {
+                $query = $this -> connection -> prepare('INSERT INTO `shared_classes` (`id`, `shared_by`, `shared_to`, `class_names`) VALUES (NULL, :sharedby, :sharedto, :class4share)');
+                $query -> execute([
+                    'sharedby' => $_SESSION['student_id'],
+                    'sharedto' => $ShareTo,
+                    'class4share' => $ToShare
+                ]);
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function isClassShared($ShareTo, $ToShare) {
+            try {
+                $query = $this -> connection -> prepare("SELECT * FROM shared_classes WHERE shared_by = :sharedby AND shared_to = :sharedto AND class_names = :toshare");
+                $query -> execute([
+                    'sharedby' => $_SESSION['student_id'],
+                    'sharedto' => $ShareTo,
+                    'toshare' => $ToShare
+
+                ]);
+
+                if ($query -> rowCount() > 0) {
+                    return true;
+                }
+                return false;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        public function isShareToExist($userid) {
+            try {
+                $query = $this -> connection -> prepare("SELECT * FROM person WHERE id = :usermail");
+                $query -> execute([
+                    'usermail' => $userid
+                ]);
+
+                if ($query -> rowCount() > 0) {
+                    return true;
+                }
+
+                return false;
+            } catch (Exception $e) {
+                //die('Error: ' . $e -> getMessage());
+            }
+        }
     }
