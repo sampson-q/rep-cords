@@ -28,6 +28,14 @@ CREATE TABLE `repnotes`.`all_class` (
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `repnotes`.`shared_classes` ( 
+    `id` INT(20) NOT NULL AUTO_INCREMENT , 
+    `shared_by` VARCHAR(10) NOT NULL , 
+    `shared_to` VARCHAR(10) NOT NULL , 
+    `class_names` VARCHAR(50) NOT NULL , 
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS securityQuestions(
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(10) NOT NULL UNIQUE,
