@@ -55,10 +55,6 @@
 
         <div style="" class="container-fluid col-xs-6" id="ViewClassMembers">
             <?php
-                $class2operate = filter_input(INPUT_POST, 'class2operate');
-                $class2delete = filter_input(INPUT_POST, 'classname');
-                $db = new DatabaseConnection('localhost', 'root', '');
-                $connection = $db -> ConnectDB();
                 if (isset($_POST['viewclassmembers'])){
                     $query = $connection -> prepare("SELECT * FROM `repnotes`.`:classtoshow`");
                     $query -> execute([
@@ -106,7 +102,8 @@
                             <div name="proceedclassremov" id="proceedclassremov" class="btn btn-danger">Delete</div>
                         </form>
                     </div>
-                <?php } ?>
+                <?php }
+            ?>
         </div>
         
         <div style="display: none;" class="container-fluid col-xs-6" id="AddClassMembers">
