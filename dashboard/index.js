@@ -17,6 +17,14 @@
         });
     }
 
+    // view attendance
+    var Attendance = document.getElementById('attendance');
+    if (Attendance) {
+        Attendance.addEventListener('click', function () {
+            alert('Hey');
+        });
+    }
+    
     // function to switch to add-new-class form
     var AddClassPage = document.getElementById('addclass');
     if (AddClassPage) {
