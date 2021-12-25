@@ -228,6 +228,7 @@
                     'class_names' => $classname
                 ]);
 
+                
                 return true;
             } catch (Exception $e) {
                 die ('Error ' . $e -> getMessage());
@@ -290,6 +291,7 @@
             }
         }
 
+        // unshare a class by its id
         public function UnshareClass($class4unshare) {
             try {
                 $query = $this -> connection -> prepare('DELETE FROM `repnotes`.`shared_classes` WHERE `shared_classes`.`id` = :unshare');
@@ -316,6 +318,40 @@
             }
         }
 
+        // unsahre class to all users that it has been shared to
+        public function UnshareClass0($classname) {
+            try {
+                $query = $this -> connection -> prepare('DELETE FROM `repnotes`.`shared_classes` WHERE shared_by = :sharedby AND class_names = :classname');
+                $query -> execute([
+                    'sharedby' => $_SESSION['student_id'],
+                    'classname' => $classname
+                ]);
+
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        // has this class been shared to any user?
+        public function isClassShared0($classname) {
+            try {
+                $query = $this -> connection -> prepare("SELECT * FROM shared_classes WHERE shared_by = :sharedby AND class_names = :classname");
+                $query -> execute([
+                    'sharedby' => $_SESSION['student_id'],
+                    'classname' => $classname
+                ]);
+
+                if ($query -> rowCount() > 0) {
+                    return true;
+                }
+                return false;
+            } catch (Exeception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        // is class already shared to a specific user?
         public function isClassShared($ShareTo, $ToShare) {
             try {
                 $query = $this -> connection -> prepare("SELECT * FROM shared_classes WHERE shared_by = :sharedby AND shared_to = :sharedto AND class_names = :toshare");
@@ -335,6 +371,7 @@
             }
         }
 
+        // does user-to-share-class-to exist?
         public function isShareToExist($userid) {
             try {
                 $query = $this -> connection -> prepare("SELECT * FROM person WHERE id = :usermail");
@@ -351,4 +388,6 @@
                 //die('Error: ' . $e -> getMessage());
             }
         }
+
+        // remember to remove 'Delete Class' option for users that class has been shared to
     }
