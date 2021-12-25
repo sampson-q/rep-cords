@@ -170,7 +170,12 @@
                     if ($query -> rowCount() > 0) { ?>
                     <div style="color: white;">
                         <div id="table-header-div" class="">
-                            <h2 align="center"><?php echo explode('_', $class2operate)[1]; ?></h2>
+                           <div class="col-xs-6">
+                                <h2 align="right"><?php echo explode('_', $class2operate)[1]; ?></h2>
+                           </div>
+                           <div class="col-xs-6" align="right">
+                                <h4 style="line-height: 45px;"><div class="label label-default btn" id="attendance">View Attendance</div></h4>
+                           </div>
                             
                             <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
                             <table class="table">
@@ -479,11 +484,7 @@
                         </div>
                     </div>
                     
-                <?php } else { echo '<h2 align="center" style="color: white;">Classes you shared will appear here<h2>
-                                    <tr align="right">
-                                        <td><div class="col-xs-8"></div></td>
-                                        <td><div id="shareaclass" class="btn btn-primary">Share A Class</div></td>
-                                    </tr>'; }
+                <?php } else { echo '<h2 align="center" style="color: white;">Classes shared to you will appear here<h2>'; }
             ?>
         </div>
 

@@ -22,12 +22,15 @@
     $ShareTo = filter_input(INPUT_POST, 'share2');
     
     $crud = new CrudOperation();
+
+    // removing of a class
     if (isset($classname) && isset($classtoremove)) {
         if ($crud -> RemoveClass($classtoremove, $classname)) {
             echo 'class_removed';
         }
     }
     
+    // add member to a class
     else if (isset($classforadd) && isset($personforadd) && isset($personidforadd)) {
         if ($crud -> isMemberExist($personidforadd, $classforadd)) {
             $crud -> AddClassMember($personidforadd, $personforadd, $classforadd);
@@ -35,24 +38,28 @@
         } else { echo 'member_exists'; }
     }
     
+    // update member details
     else if (isset($classforupdate) && isset($personforupdate) && isset($personidforupdate) && isset($recordtoupdate)) {
         if ($crud -> UpdateMemberDetails($classforupdate, $personforupdate, $personidforupdate, $recordtoupdate)) {
             echo 'member_updated';
         }
     }
 
+    // remove member from a class
     else if (isset($recordtoremove) && isset($class4remove)) {
         if ($crud -> RemoveMemberDetails($class4remove, $recordtoremove)) {
             echo 'member_removed';
         }
     }
 
+    // unshare a class
     else if (isset($classunshare)) {
         if ($crud -> UnshareClass($classunshare)) {
             echo 'class_unshared';
         }
     }
     
+    // share a class
     else if (isset($ShareTo) && isset($ToShare)) {
         if ($crud -> isShareToExist($ShareTo)) {
             if ($crud -> isClassShared($ShareTo, $ToShare)) { echo 'class_already_shared'; }
