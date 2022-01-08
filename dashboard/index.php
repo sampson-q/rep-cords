@@ -172,6 +172,8 @@
                         <div id="table-header-div" class="">
                            <div class="col-xs-6">
                                 <h2 align="right"><?php echo explode('_', $class2operate)[1]; ?></h2>
+                                <input type="hidden" value="<?php echo explode('_', $class2operate)[1] ?>" id="attendance-class"/>
+                                <input type="hidden" value="ownedClassType" id="classType" />
                            </div>
                            <div class="col-xs-6" align="right">
                                 <h4 style="line-height: 45px;"><div class="label label-default btn" id="attendance">View Attendance</div></h4>
@@ -190,31 +192,31 @@
                             </div>
                         </div>
                         <div>
-                        <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
-                            <table class="table table-responsive" style="color: white;">
-                                <tr id="table-body-div">
-                                <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                    <tr align="center">
-                                        <td><?php echo $counter; ?></td>
-                                        <td width="500"><?php echo $result['studentname']; ?></td>
-                                        <td><?php echo $result['studentid']; ?></td>
-                                        <form action="" method="POST">
-                                            <input type="hidden" name="sn" id="sn" value="<?php echo $result['sn']; ?>" />
-                                            <input type="hidden" name="class2operate" id="class2operate" value="<?php echo $class2operate ?>" />
-                                            <input type="hidden" name="id2operate" id="id2operate" value="<?php echo $result['studentid']; ?>" />
-                                            <input type="hidden" name="name2operate" id="name2operate" value="<?php echo $result['studentname']; ?>" />
-                                            <td><input id="updatemember" name="updatemember" type="submit" id="tableButton" class="btn btn-success" value="Update" /></td>
-                                            <td><input id="removemember" name="removemember" type="submit" id="tableButton"class="btn btn-danger" value="Remove" /></td>
-                                        </form>
+                            <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
+                                <table class="table table-responsive" style="color: white;">
+                                    <tr id="table-body-div">
+                                    <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                        <tr align="center">
+                                            <td><?php echo $counter; ?></td>
+                                            <td width="500"><?php echo $result['studentname']; ?></td>
+                                            <td><?php echo $result['studentid']; ?></td>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="sn" id="sn" value="<?php echo $result['sn']; ?>" />
+                                                <input type="hidden" name="class2operate" id="class2operate" value="<?php echo $class2operate ?>" />
+                                                <input type="hidden" name="id2operate" id="id2operate" value="<?php echo $result['studentid']; ?>" />
+                                                <input type="hidden" name="name2operate" id="name2operate" value="<?php echo $result['studentname']; ?>" />
+                                                <td><input id="updatemember" name="updatemember" type="submit" id="tableButton" class="btn btn-success" value="Update" /></td>
+                                                <td><input id="removemember" name="removemember" type="submit" id="tableButton"class="btn btn-danger" value="Remove" /></td>
+                                            </form>
+                                        </tr>
+                                    <?php $counter += 1; } ?>
                                     </tr>
-                                <?php $counter += 1; } ?>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-xs-12" style="height: 15px;"></div>
-                        <div class="col-xs-12" align="right">
-                            <div id="addmember" class="btn btn-primary">Add Member</div>
-                        </div>
+                                </table>
+                            </div>
+                            <div class="col-xs-12" style="height: 15px;"></div>
+                            <div class="col-xs-12" align="right">
+                                <div id="addmember" class="btn btn-primary">Add Member</div>
+                            </div>
                         </div>
                     </div>
                     <?php } else { echo '<h2 style="color: white;">Class members will show here if any!<h2>
@@ -503,8 +505,15 @@
 
                     if ($query -> rowCount() > 0) { ?>
                     <div style="color: white;">
-                        <div id="table-header-div" class="">
-                            <h2 align="center"><?php echo $class2operate; ?></h2>
+                    <div id="table-header-div" class="">
+                           <div class="col-xs-6">
+                                <h2 align="right"><?php echo $class2operate ?></h2>
+                                <input type="hidden" value="<?php echo $class2operate ?>" id="attendance-class"/>
+                                <input type="hidden" value="sharedClassType" id="classType" />
+                           </div>
+                           <div class="col-xs-6" align="right">
+                                <h4 style="line-height: 45px;"><div class="label label-default btn" id="attendance">View Attendance</div></h4>
+                           </div>
                             
                             <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
                             <table class="table">
