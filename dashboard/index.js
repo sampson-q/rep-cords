@@ -21,7 +21,9 @@
     var Attendance = document.getElementById('attendance');
     if (Attendance) {
         Attendance.addEventListener('click', function () {
-            alert('Hey');
+            var ClassAttendance = document.getElementById('attendance-class').value;
+            var ClassType = document.getElementById('classType').value;
+            alert("This is a " + ClassType);
         });
     }
     
