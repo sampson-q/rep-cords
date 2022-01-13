@@ -36,6 +36,17 @@ CREATE TABLE `repnotes`.`shared_classes` (
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `repnotes`.`all_attendance` (
+    `id` INT(20) NOT NULL AUTO_INCREMENT ,
+    `attend_names` VARCHAR(50) NOT NULL ,
+    `class_names` VARCHAR(50) NOT NULL ,
+    `taken_by` VARCHAR(10) NOT NULL ,
+    `file_pdf` BLOB NOT NULL ,
+    PRIMARY KEY  (`id`),
+    UNIQUE  `attend_names` (`attend_names`(50))
+);
+
+
 CREATE TABLE IF NOT EXISTS securityQuestions(
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(10) NOT NULL UNIQUE,

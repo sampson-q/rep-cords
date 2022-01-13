@@ -18,14 +18,33 @@
     }
 
     // view attendance
-    var Attendance = document.getElementById('attendance');
+    /*var Attendance = document.getElementById('attendance');
     if (Attendance) {
         Attendance.addEventListener('click', function () {
             var ClassAttendance = document.getElementById('attendance-class').value;
             var ClassType = document.getElementById('classType').value;
-            alert("This is a " + ClassType);
+            var ClassBin;
+
+            alert(ClassType);
+            if (ClassType == 'sharedClassType') { ClassBin = 1 }
+            else if (ClassType == 'ownedClassType') {ClassBin = 0 }
+            else {alert('There is an error: ' + ClassBin)}
+            
+            $.ajax({
+                url: 'index.php',
+                method: 'POST',
+                data: {
+                   classtype: ClassBin,
+                   classnameattendance: ClassAttendance
+                },
+                complete: function (feed) {
+                    alert(feed.responseText);
+                }
+            });
         });
-    }
+
+        swapView('DashHome', 'ViewAttendance')
+    }*/
     
     // function to switch to add-new-class form
     var AddClassPage = document.getElementById('addclass');

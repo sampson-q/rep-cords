@@ -170,14 +170,17 @@
                     if ($query -> rowCount() > 0) { ?>
                     <div style="color: white;">
                         <div id="table-header-div" class="">
-                           <div class="col-xs-6">
-                                <h2 align="right"><?php echo explode('_', $class2operate)[1]; ?></h2>
-                                <input type="hidden" value="<?php echo explode('_', $class2operate)[1] ?>" id="attendance-class"/>
-                                <input type="hidden" value="ownedClassType" id="classType" />
-                           </div>
-                           <div class="col-xs-6" align="right">
-                                <h4 style="line-height: 45px;"><div class="label label-default btn" id="attendance">View Attendance</div></h4>
-                           </div>
+                            <form action="" method="POST">
+                                <div class="col-xs-6">
+                                        <h2 align="right"><?php echo explode('_', $class2operate)[1] ?></h2>
+                                        <input type="hidden" value="<?php echo $class2operate ?>" id="attendance-class" name="attendance-class" />
+                                </div>
+                                <div class="col-xs-6" align="right">
+                                        <h6 style="line-height: 45px;">
+                                            <input type="submit" class="btn btn-primary" id="vattendance" name="vattendance" value="View Attendance">
+                                        </h6>
+                                </div>
+                            </form>
                             
                             <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
                             <table class="table">
@@ -425,6 +428,7 @@
             </div>
         </div>
         <?php } ?>
+
         <?php 
                 if (isset($_POST['shareclassbutton'])) {
                     $shareclassto = filter_input(INPUT_POST, 'shareclassto');
@@ -505,26 +509,29 @@
 
                     if ($query -> rowCount() > 0) { ?>
                     <div style="color: white;">
-                    <div id="table-header-div" class="">
-                           <div class="col-xs-6">
-                                <h2 align="right"><?php echo $class2operate ?></h2>
-                                <input type="hidden" value="<?php echo $class2operate ?>" id="attendance-class"/>
-                                <input type="hidden" value="sharedClassType" id="classType" />
-                           </div>
-                           <div class="col-xs-6" align="right">
-                                <h4 style="line-height: 45px;"><div class="label label-default btn" id="attendance">View Attendance</div></h4>
-                           </div>
-                            
+                        <div id="table-header-div" class="">
+                        <form action="" method="POST">
+                                <div class="col-xs-6">
+                                        <h2 align="right"><?php echo $class2operate ?></h2>
+                                        <input type="hidden" value="<?php echo $class2operate ?>" id="attendance-class" name="attendance-class" />
+                                </div>
+                                <div class="col-xs-6" align="right">
+                                        <h6 style="line-height: 45px;">
+                                            <input type="submit" class="btn btn-primary" id="vattendance" name="vattendance" value="View Attendance">
+                                        </h6>
+                                </div>
+                            </form>
+
                             <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
-                            <table class="table">
-                                <tr>
-                                    <td>S/N</td>
-                                    <td align="center">Student Name</td>
-                                    <td align="center">Student ID</td>
-                                    <td>Options</td>
-                                    <td></td>
-                                </tr>
-                            </table>
+                                <table class="table">
+                                    <tr>
+                                        <td>S/N</td>
+                                        <td align="center">Student Name</td>
+                                        <td align="center">Student ID</td>
+                                        <td>Options</td>
+                                        <td></td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                         <div>
@@ -560,7 +567,7 @@
                                             <td><div class="col-xs-8"></div></td>
                                             <td><div id="addmember" class="btn btn-primary">Add Member</div></td>
                                         </tr>';}
-                }?>
+            }?>
         </div>
 
         <?php
@@ -595,6 +602,67 @@
                 <input type="hidden" value="<?php echo strtolower($class2operate) ?>" id="memberaddclass" />
                 <input type="submit" class="form-control btn btn-primary" value="Add Member" id="addmemberbutton" name="addmemberbutton"/>
             </form>
+        </div>
+
+        <div style="display: none;" class="container-fluid col-xs-6" id="ViewAttendance">
+            <?php
+                if (isset($_POST['vattendance'])) {
+                    $ClassType = filter_input(INPUT_POST, 'attendance-class');
+                    echo '<script>document.getElementById("ViewAttendance").style = "display: block;";</script>';
+                    echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
+
+                    $query = $connection -> prepare('SELECT * FROM all_attendance WHERE class_names = :classname');
+                    $query -> execute([
+                        'classname' => $ClassType
+                    ]);
+                    
+                    if ($query -> rowCount() > 0) { ?>
+                        <div style="color: white;">
+                            <div id="table-header-div" class="">
+                                <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
+                                    <table class="table">
+                                        <tr>
+                                            <td>S/N</td>
+                                            <td align="center">Attend. Name</td>
+                                            <td align="center">Taken By</td>
+                                            <td>Options</td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div>
+                            <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
+                                <table class="table table-responsive" style="color: white;">
+                                    <tr id="table-body-div">
+                                    <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                        <tr align="center">
+                                            <td><?php echo $counter; ?></td>
+                                            <td width="500"><?php echo $result['attend_names']; ?></td>
+                                            <td><?php echo $result['taken_by']; ?></td>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="sn" id="sn" value="<?php echo $result['id']; ?>" />
+                                                <td><input id="updatemember" name="updatemember" type="submit" id="tableButton" class="btn btn-success" value="View" /></td>
+                                                <td><input id="removemember" name="removemember" type="submit" id="tableButton"class="btn btn-danger" value="Delete" /></td>
+                                            </form>
+                                        </tr>
+                                    <?php $counter += 1; } ?>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-xs-12" style="height: 15px;"></div>
+                            <div class="col-xs-12" align="right">
+                                <div id="takeattendance" class="btn btn-primary">Take Attendance</div>
+                            </div>
+                            </div>
+                        </div>
+                        <?php } else { echo '<h2 style="color: white;">Attendances will show here<h2>
+                                            <tr align="right">
+                                                <td><div class="col-xs-8"></div></td>
+                                                <td><div id="takeattendance" class="btn btn-primary">Take Attendance</div></td>
+                                            </tr>';}
+                }
+            ?>
         </div>
 
         <script src="../js/index.js"></script>
