@@ -90,6 +90,12 @@
                 <div id="viewclass" name="viewclass" class="btn col-xs-3" style="font-size: 24px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
                     View Attend.
                 </div>
+
+                <div class="col-xs-1" align="center"></div>
+
+                <div id="courses" name="courses" class="btn col-xs-3" style="font-size: 24px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                    Courses
+                </div>
             </div>
         </div>
 
@@ -161,6 +167,7 @@
                     echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
             
                     $class2operate = filter_input(INPUT_POST, 'class2operate');
+                    $_SESSION['class2show'] = $class2operate;
 
                     $query = $connection -> prepare("SELECT * FROM `repnotes`.`:classtoshow`");
                     $query -> execute([
@@ -255,39 +262,39 @@
                 $class2operate = filter_input(INPUT_POST, 'class2operate');
                 $backupname = $name2operate; $backupid = $id2operate;
                 echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
-        ?>
-        <div class="container-fluid col-xs-6" id="Individuals">
-            <form role="form">
-                <input type="hidden" name="memberupdateclass" id="memberupdateclass" value="<?php echo $class2operate ?>" />
-                <input type="hidden" name="backupname" id="backupname" value="<?php echo $backupname?>" />
-                <input type="hidden" name="backupid" id="backupid" value="<?php echo $backupid?>" />
-                <input type="hidden" name="sntoupdate" id="sntoupdate" value="<?php echo $sn ?>" />
-                <div class="form-group">
-                    <label for="addstudentid">Student ID :</label>
-                    <input type="text" class="form-control" id="updatestudentid" value="<?php echo $id2operate ?>" name="addstudentid" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="addstudentname">Student Name:</label>
-                    <input type="text" class="form-control" id="updatestudentname" value="<?php echo $name2operate ?>" name="addstudentname" required>
-                </div>
-                <input type="submit" class="form-control btn btn-primary" value="Update" id="update" name="update"/>
-            </form>
-        </div>
-        <?php } else if (isset($_POST['removemember'])) {
-            $sn = filter_input(INPUT_POST, 'sn');
-            $name2operate = filter_input(INPUT_POST, 'name2operate');
-            $class2operate = filter_input(INPUT_POST, 'class2operate');
-            echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
             ?>
-            <div style="color: white; text-align: center; display: block;" id="alert-box" class="container-fluid col-xs-12">
-                <h4>This action cannot be undone!<p>Do you wish to remove <strong><?php echo $name2operate ?> </strong> from <strong><?php echo explode('_', $class2operate)[1]; ?></strong>?</h4>
-                
-                <input type="hidden" value="<?php echo $class2operate ?>" id="class2delete" name="class2delete" />
-                <input type="hidden" value="<?php echo $sn ?>" id="recordtoremove" />
-                <div id="cancelclassremove" class="btn btn-primary">Cancel</div>
-                <div name="proceedmemremov" id="proceedmemremov" class="btn btn-danger">Delete</div>
+            <div class="container-fluid col-xs-6" id="Individuals">
+                <form role="form">
+                    <input type="hidden" name="memberupdateclass" id="memberupdateclass" value="<?php echo $class2operate ?>" />
+                    <input type="hidden" name="backupname" id="backupname" value="<?php echo $backupname?>" />
+                    <input type="hidden" name="backupid" id="backupid" value="<?php echo $backupid?>" />
+                    <input type="hidden" name="sntoupdate" id="sntoupdate" value="<?php echo $sn ?>" />
+                    <div class="form-group">
+                        <label for="addstudentid">Student ID :</label>
+                        <input type="text" class="form-control" id="updatestudentid" value="<?php echo $id2operate ?>" name="addstudentid" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="addstudentname">Student Name:</label>
+                        <input type="text" class="form-control" id="updatestudentname" value="<?php echo $name2operate ?>" name="addstudentname" required>
+                    </div>
+                    <input type="submit" class="form-control btn btn-primary" value="Update" id="update" name="update"/>
+                </form>
             </div>
+            <?php } else if (isset($_POST['removemember'])) {
+                $sn = filter_input(INPUT_POST, 'sn');
+                $name2operate = filter_input(INPUT_POST, 'name2operate');
+                $class2operate = filter_input(INPUT_POST, 'class2operate');
+                echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
+                ?>
+                <div style="color: white; text-align: center; display: block;" id="alert-box" class="container-fluid col-xs-12">
+                    <h4>This action cannot be undone!<p>Do you wish to remove <strong><?php echo $name2operate ?> </strong> from <strong><?php echo explode('_', $class2operate)[1]; ?></strong>?</h4>
+                    
+                    <input type="hidden" value="<?php echo $class2operate ?>" id="class2delete" name="class2delete" />
+                    <input type="hidden" value="<?php echo $sn ?>" id="recordtoremove" />
+                    <div id="cancelclassremove" class="btn btn-primary">Cancel</div>
+                    <div name="proceedmemremov" id="proceedmemremov" class="btn btn-danger">Delete</div>
+                </div>
         <?php } ?>
 
         <div style="display: none;" class="container-fluid col-xs-6" id="SharedClasses">
@@ -501,6 +508,7 @@
                     echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
             
                     $class2operate = filter_input(INPUT_POST, 'class2operate');
+                    $_SESSION['class2show'] = $class2operate;
 
                     $query = $connection -> prepare("SELECT * FROM `repnotes`.`:classtoshow`");
                     $query -> execute([
@@ -664,6 +672,122 @@
                 }
             ?>
         </div>
+
+        <div style="display: none;" class="container-fluid col-xs-6" id="TakeAttendance">
+            <?php
+                if (isset($_SESSION['class2show']) && !empty($_SESSION['class2show'])) {
+                    $query = $connection -> prepare('SELECT * FROM `repnotes`.:classname');
+                    $query -> execute([
+                        'classname' => $_SESSION['class2show']
+                    ]);
+                }
+            ?>
+        </div>
+
+        <div style="display: none;" class="container-fluid col-xs-6" id="Courses">
+            <?php
+                $query = $connection -> prepare('SELECT * FROM registered_courses WHERE student_id = :userid');
+                $query -> execute([
+                    'userid' => $_SESSION['student_id']
+                ]);
+
+                if ($query -> rowCount() > 0) { ?>
+                    <div style="color: white;">
+                        <div id="table-header-div" class="">
+                            
+                            <div class="col-xs-6">
+                                    <h2 align="right">My Courses</h2>
+                            </div>
+                            
+                            <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
+                            <table class="table">
+                                <tr>
+                                    <td>S/N</td>
+                                    <td align="center">Course Name</td>
+                                    <td align="center">Course Code</td>
+                                    <td>Lecturer</td>
+                                    <td>Options</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
+                                <table class="table table-responsive" style="color: white;">
+                                    <tr id="table-body-div">
+                                    <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                        <tr align="center">
+                                            <td><?php echo $counter; ?></td>
+                                            <td width="500"><?php echo $result['courses_name']; ?></td>
+                                            <td><?php echo $result['courses_code']; ?></td>
+                                            <td><?php echo $result['lecturer_name']; ?></td>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="snid" id="snid" value="<?php echo $result['id']; ?>" />
+                                                <input type="hidden" name="coursenameEdit" id="coursenameEdit" value="<?php echo $result['courses_name']; ?>" />
+                                                <input type="hidden" name="coursecodeEdit" id="coursecodeEdit" value="<?php echo $result['courses_code']; ?>" />
+                                                <input type="hidden" name="lecturnameEdit" id="lecturnameEdit" value="<?php echo $result['lecturer_name']; ?>" />
+                                                <td><input id="updatecourses" name="updatecourses" type="submit" id="tableButton" class="btn btn-success" value="Update" /></td>
+                                                <td><input id="removecourses" name="removecourses" type="submit" id="tableButton"class="btn btn-danger" value="Remove" /></td>
+                                            </form>
+                                        </tr>
+                                    <?php $counter += 1; } ?>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-xs-12" style="height: 15px;"></div>
+                            <div class="col-xs-12" align="right">
+                                <div id="registercourses" class="btn btn-primary">Register Courses</div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } else { echo '<h2 style="color: white;">You have not registered any courses yet<h2>
+                                        <tr align="right">
+                                            <td><div class="col-xs-8"></div></td>
+                                            <td><div id="registercourses" class="btn btn-primary">Register Courses</div></td>
+                                        </tr>';}?>
+        </div>
+
+        <?php
+            if (isset($_POST['updatecourses'])) {
+                $sn = (int) filter_input(INPUT_POST, 'snid');
+                $coursenameEdit = filter_input(INPUT_POST, 'coursenameEdit');
+                $coursecodeEdit = filter_input(INPUT_POST, 'coursecodeEdit');
+                $LecturnameEdit = filter_input(INPUT_POST, 'lecturnameEdit');
+
+                $backname = filter_input(INPUT_POST, 'coursenameEdit');
+                $backcode = filter_input(INPUT_POST, 'coursecodeEdit');
+                $backlect = filter_input(INPUT_POST, 'lecturnameEdit');
+
+                echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
+            ?>
+            <div class="container-fluid col-xs-6" id="Individuals">
+                <form role="form">
+                    <input type="hidden" name="recforup" id="recforup" value="<?php echo $sn ?>" />
+                    <input type="hidden" name="backname" id="backname" value="<?php echo $backname ?>" />
+                    <input type="hidden" name="backcode" id="backcode" value="<?php echo $backcode ?>" />
+                    <input type="hidden" name="backlect" id="backlect" value="<?php echo $backlect ?>" />
+
+                    <div class="form-group">
+                        <label for="updatecoursecode">Course Code:</label>
+                        <input type="text" class="form-control" id="updatecoursecode" value="<?php echo $coursecodeEdit; ?>" name="updatecoursecode" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updatecoursename">Course Name:</label>
+                        <input type="text" class="form-control" id="updatecoursename" name="updatecoursename" value="<?php echo $coursenameEdit; ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updatelecname">Lecturer Name:</label>
+                        <input type="text" class="form-control" id="updatelecname" name="updatelecname" value="<?php echo $LecturnameEdit; ?>" required>
+                    </div>
+
+                    <input type="submit" class="form-control btn btn-primary" value="Update Course" id="updatecourse" name="updatecourse"/>
+                </form>
+            </div>
+        <?php } ?>
+
 
         <script src="../js/index.js"></script>
         <script src="index.js"></script>

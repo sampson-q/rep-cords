@@ -238,6 +238,31 @@
             } else { alert('Provide Student ID!'); }
         });
     }
+    
+    // update course details
+    var UpdateCourse = document.getElementById('updatecourse');
+    if (UpdateCourse) {
+        UpdateCourse.addEventListener('click', function () {
+            var recforup = document.getElementById('recforup').value;
+            var coursenameEdit = document.getElementById('coursenameEdit').value;
+            var coursecodeEdit = document.getElementById('coursecodeEdit').value;
+            var updateLecname = document.getElementById('updatelecname').value;
+
+            $.ajax({
+                url: '../models/ClassTransactions.php',
+                method: 'POST',
+                data: {
+                    EditCourseName: coursenameEdit,
+                    EditCourseCode: coursecodeEdit,
+                    EditLectname: updateLecname,
+                    RecForEdit: recforup
+                },
+                complete: function (feed) {
+                    alert(feed.responseText);
+                }
+            });
+        });
+    }
 
     // remove member from class
     var RemoveMember = document.getElementById('proceedmemremov');
@@ -348,4 +373,60 @@
             swapView('DashHome', 'import-classes');
         });
     }
+
+    // take attendance
+    var TakeAttendance = document.getElementById('takeattendance');
+    if (TakeAttendance) {
+        TakeAttendance.addEventListener('click', function () {
+            swapView('DashHome', 'TakeAttendance');
+        })
+    }
+
+    // courses
+    var Courses = document.getElementById('courses');
+    if (Courses) {
+        Courses.addEventListener('click', function () {
+            swapView('DashHome', 'Courses');
+        });
+    }
+
+    // view courses
+    var RegisterCourses = document.getElementById('registercourses');
+    if (RegisterCourses) {
+        RegisterCourses.addEventListener('click', function () {
+            swapView('Courses', 'RegisterCourses');
+        });
+    }
+    
+    // registers courses
+    var RRegisterCourses = document.getElementById('registercoursebutton');
+    if (RRegisterCourses) {
+        RRegisterCourses.addEventListener('click', function () {
+            var CourseName = document.getElementById('coursename').value;
+            var CourseCode = document.getElementById('coursecode').value;
+            var LecturerNa = document.getElementById('lecname').value;
+
+            if (CourseCode != '' && CourseName != '' && LecturerNa != '') {
+                $.ajax({
+                    url: '../models/ClassTransactions.php',
+                    method: 'POST',
+                    data: {
+                        cname: CourseName,
+                        ccode: CourseCode,
+                        lname: LecturerNa
+                    },
+                    complete: function (feed) {
+                        if (feed.responseText == 'courses_registered') {
+                            alert('Course Registered');
+                        }
+                    }
+                });
+            } else {
+                alert('Fill all fields');
+            }
+        });
+    }
+
+
+
 })();

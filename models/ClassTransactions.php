@@ -21,6 +21,15 @@
     $ToShare = filter_input(INPUT_POST, 'share22');
     $ShareTo = filter_input(INPUT_POST, 'share2');
     
+    $CourseName = filter_input(INPUT_POST, 'cname');
+    $CourseCode = filter_input(INPUT_POST, 'ccode');
+    $LecturerNa = filter_input(INPUT_POST, 'lname');
+    
+    $coursenameEdit = filter_input(INPUT_POST, 'EditCourseName');
+    $coursecodeEdit = filter_input(INPUT_POST, 'EditCourseCode');
+    $lectnameEdit = filter_input(INPUT_POST, 'EditLectname');
+    $recforup = filter_input(INPUT_POST, 'RecForEdit');
+    
     $crud = new CrudOperation();
 
     // removing of a class
@@ -42,6 +51,13 @@
     else if (isset($classforupdate) && isset($personforupdate) && isset($personidforupdate) && isset($recordtoupdate)) {
         if ($crud -> UpdateMemberDetails($classforupdate, $personforupdate, $personidforupdate, $recordtoupdate)) {
             echo 'member_updated';
+        }
+    }
+
+    // update course details
+    else if (isset($coursenameEdit) && isset($coursecodeEdit) && isset($lectnameEdit) && isset($recforup)) {
+        if ($crud -> UpdateCourseDetails($coursenameEdit, $coursecodeEdit, $lectnameEdit, $recforup)) {
+            echo 'course_update_success';
         }
     }
 
@@ -69,5 +85,11 @@
                 } else { echo 'class_unsharedd' ; }
             }
         } else { echo 'member_not_exist'; }
+    }
+
+    // register courses
+    else if (isset($CourseCode) && isset($CourseName) && isset($LecturerNa)) {
+        $crud -> RegisterCourses($CourseCode, $CourseName, $LecturerNa);
+        echo 'courses_registered';
     }
 ?>

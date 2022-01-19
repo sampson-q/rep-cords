@@ -274,6 +274,24 @@
 
                 return true;
             } catch (Exception $e) {
+                //die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        // update course details
+        public function UpdateCourseDetails($coursenameEdit, $coursecodeEdit, $lectnameEdit, $recforup) {
+            try {
+                $query = $this -> connection -> prepare("UPDATE `registered_courses` SET `courses_code` = :coursecode, `courses_name` = :coursename, `lecturer_name` = :lectname WHERE `registered_courses`.`id` = :idchange;");
+                //$query = $this -> connection -> prepare("UPDATE registered_courses SET courses_code = :coursecode, courses_name = :coursename, lecturer_name = :lectname WHERE id = :idchange");
+                $query -> execute([
+                    'coursecode' => $coursecodeEdit,
+                    'coursename' => $coursenameEdit,
+                    'lectname' => $lectnameEdit,
+                    'idchange' => $recforup
+                ]);
+
+                return true;
+            } catch (Exception $e) {
                 die ('Error: ' . $e -> getMessage());
             }
         }
@@ -386,6 +404,21 @@
                 return false;
             } catch (Exception $e) {
                 //die('Error: ' . $e -> getMessage());
+            }
+        }
+
+        // register courses
+        public function RegisterCourses($courseCode, $courseName, $lecName) {
+            try {
+                $query = $this -> connection -> prepare("INSERT INTO `registered_courses` (`id`, `courses_code`, `courses_name`, `lecturer_name`, `student_id`) VALUES (NULL, :coursecode, :coursename, :lecname, :studentid)");
+                $query -> execute([
+                    'studentid' => $_SESSION['student_id'],
+                    'coursecode' => $courseCode,
+                    'coursename' => $courseName,
+                    'lecname' => $lecName
+                ]);
+            } catch (Exception $e) {
+                die('Error: '. $e -> getMessage());
             }
         }
 

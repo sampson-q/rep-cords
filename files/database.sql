@@ -47,6 +47,15 @@ CREATE TABLE `repnotes`.`all_attendance` (
 );
 
 
+CREATE TABLE `repnotes`.`registered_courses` ( 
+    `id` INT(20) NOT NULL AUTO_INCREMENT ,
+    `courses_code` VARCHAR(8) NOT NULL ,
+    `courses_name` VARCHAR(50) NOT NULL ,
+    `lecturer_name` VARCHAR(50) NOT NULL ,
+    `student_id` VARCHAR(10) NOT NULL ,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS securityQuestions(
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(10) NOT NULL UNIQUE,
