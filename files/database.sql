@@ -40,8 +40,7 @@ CREATE TABLE `repnotes`.`all_attendance` (
     `id` INT(20) NOT NULL AUTO_INCREMENT ,
     `attend_names` VARCHAR(50) NOT NULL ,
     `class_names` VARCHAR(50) NOT NULL ,
-    `taken_by` VARCHAR(10) NOT NULL ,
-    `file_pdf` BLOB NOT NULL ,
+    `taken_by` VARCHAR(50) NOT NULL ,
     PRIMARY KEY  (`id`),
     UNIQUE  `attend_names` (`attend_names`(50))
 );

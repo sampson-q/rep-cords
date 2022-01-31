@@ -24,11 +24,19 @@
     $CourseName = filter_input(INPUT_POST, 'cname');
     $CourseCode = filter_input(INPUT_POST, 'ccode');
     $LecturerNa = filter_input(INPUT_POST, 'lname');
-    
-    $coursenameEdit = filter_input(INPUT_POST, 'EditCourseName');
-    $coursecodeEdit = filter_input(INPUT_POST, 'EditCourseCode');
-    $lectnameEdit = filter_input(INPUT_POST, 'EditLectname');
-    $recforup = filter_input(INPUT_POST, 'RecForEdit');
+
+    $UpdateCourseCode = filter_input(INPUT_POST, 'coursecodeupdate');
+    $UpdateCourseName = filter_input(INPUT_POST, 'coursenameupdate');
+    $UpdateLectName = filter_input(INPUT_POST, 'lectnameupdate');
+    $RecordForUpdate = filter_input(INPUT_POST, 'recordforupdate');
+
+    $Course2Unregister = filter_input(INPUT_POST, 'coursetoremove');
+
+    $AttendName = filter_input(INPUT_POST, 'attend_name');
+    $RepName = filter_input(INPUT_POST, 'rep_name');
+
+    $AttendanceToRemove = filter_input(INPUT_POST, 'att2rem');
+    $AttendanceToMove = filter_input(INPUT_POST, 'att2move');
     
     $crud = new CrudOperation();
 
@@ -55,9 +63,9 @@
     }
 
     // update course details
-    else if (isset($coursenameEdit) && isset($coursecodeEdit) && isset($lectnameEdit) && isset($recforup)) {
-        if ($crud -> UpdateCourseDetails($coursenameEdit, $coursecodeEdit, $lectnameEdit, $recforup)) {
-            echo 'course_update_success';
+    else if (isset($UpdateCourseCode)) {
+        if ($crud -> UpdateCourseDetails($UpdateCourseName, $UpdateCourseCode, $UpdateLectName, $RecordForUpdate)) {
+            echo 'class_update_success';
         }
     }
 
@@ -75,6 +83,13 @@
         }
     }
     
+    // unregister a course
+    else if (isset($Course2Unregister)) {
+        if ($crud -> UnregisterCourse($Course2Unregister)) {
+            echo 'course_unregistered';
+        }
+    }
+
     // share a class
     else if (isset($ShareTo) && isset($ToShare)) {
         if ($crud -> isShareToExist($ShareTo)) {
@@ -87,9 +102,20 @@
         } else { echo 'member_not_exist'; }
     }
 
-    // register courses
+    // register courses ... remember to add isCourseRegistered
     else if (isset($CourseCode) && isset($CourseName) && isset($LecturerNa)) {
         $crud -> RegisterCourses($CourseCode, $CourseName, $LecturerNa);
         echo 'courses_registered';
+    }
+
+    // save attendance details
+    else if (isset($AttendName) && isset($RepName)) {
+        $crud -> SaveAttendanceDetails($AttendName, $RepName);
+        echo 'attend_saved';
+    }
+
+    else if (isset($AttendanceToRemove) && isset($AttendanceToMove)) {
+        $crud -> RemoveAttendance($AttendanceToRemove, $AttendanceToMove);
+        echo 'attend_removed';
     }
 ?>

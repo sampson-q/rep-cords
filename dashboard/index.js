@@ -109,15 +109,6 @@
         });
     }
 
-
-    // delete-class-in-form
-    var DeleteClass = document.getElementById('deleteclass');
-    if (DeleteClass) {
-        DeleteClass.addEventListener('click', function () {
-            alert('Class_Deleted');
-        });
-    }
-
     // delete class button
     var ConfirmDeleteClass = document.getElementById('proceedclassremov');
     if (ConfirmDeleteClass) {
@@ -138,6 +129,31 @@
 
                     //alert(feed.responseText);
                     window.location.href = '../dashboard';
+                }
+            });
+        });
+    }
+
+    // delete an attendance
+    var ConfirmRemoveAttendance = document.getElementById('proceedattrem');
+    if (ConfirmRemoveAttendance) {
+        ConfirmRemoveAttendance.addEventListener('click', function () {
+            var AttendanceToRemove = document.getElementById('att2rem').value;
+            var AttendanceToMove = document.getElementById('att2move').value;
+            $.ajax({
+                url : '../models/ClassTransactions.php',
+                method: 'POST',
+                data: {
+                    att2rem: AttendanceToRemove,
+                    att2move: AttendanceToMove
+                },
+                complete: function (feed) {
+                    if (feed.responseText == 'attend_removed') {
+                        alert("Attendance Removed!");
+                    }
+                    
+                    alert(feed.responseText);
+                    window.location.href = "../dashboard";
                 }
             });
         });
@@ -240,25 +256,27 @@
     }
     
     // update course details
-    var UpdateCourse = document.getElementById('updatecourse');
-    if (UpdateCourse) {
-        UpdateCourse.addEventListener('click', function () {
-            var recforup = document.getElementById('recforup').value;
-            var coursenameEdit = document.getElementById('coursenameEdit').value;
-            var coursecodeEdit = document.getElementById('coursecodeEdit').value;
-            var updateLecname = document.getElementById('updatelecname').value;
-
+    var CourseUpdate = document.getElementById('courseupdate');
+    if (CourseUpdate) {
+        CourseUpdate.addEventListener('click', function () {
+            var UpdateCourseCode = document.getElementById('updatecoursecode').value;
+            var UpdateCourseName = document.getElementById('updatecoursename').value;
+            var UpdateLectName = document.getElementById('updatelectname').value;
+            var RecordForUpdate = document.getElementById('recforup').value;
             $.ajax({
                 url: '../models/ClassTransactions.php',
                 method: 'POST',
                 data: {
-                    EditCourseName: coursenameEdit,
-                    EditCourseCode: coursecodeEdit,
-                    EditLectname: updateLecname,
-                    RecForEdit: recforup
+                    coursecodeupdate: UpdateCourseCode,
+                    coursenameupdate: UpdateCourseName,
+                    lectnameupdate: UpdateLectName,
+                    recordforupdate: RecordForUpdate
                 },
                 complete: function (feed) {
-                    alert(feed.responseText);
+                    if (feed.responseText == 'class_update_success') {
+                        alert('Course Update Successfull!');
+                    }
+                    //alert(feed.responseText);
                 }
             });
         });
@@ -324,6 +342,27 @@
         });
     }
 
+    // unregister course
+    var UnregisterCourse = document.getElementById('proceedcourserem');
+    if (UnregisterCourse) {
+        UnregisterCourse.addEventListener('click', function () {
+            var CourseToRemove = document.getElementById('recordtoremove').value;
+            $.ajax({
+                url: '../models/ClassTransactions.php',
+                method: 'POST',
+                data: {coursetoremove: CourseToRemove},
+                complete: function (feed) {
+                    if (feed.responseText == 'course_unregistered') {
+                        alert('Course Unregistered!');
+                        window.location.href = '../dashboard';
+                    }
+                    
+                    //alert(feed.responseText);
+                }
+            });
+        });
+    }
+
     // proceed to sharing of class
     var ProceedShare = document.getElementById('proceedshareclass');
     if (ProceedShare) {
@@ -378,9 +417,12 @@
     var TakeAttendance = document.getElementById('takeattendance');
     if (TakeAttendance) {
         TakeAttendance.addEventListener('click', function () {
+            class4view = document.getElementById('classtype').value;
             swapView('DashHome', 'TakeAttendance');
-        })
+            swapView('ViewAttendance', 'TakeAttendance');
+        });
     }
+
 
     // courses
     var Courses = document.getElementById('courses');
@@ -404,7 +446,7 @@
         RRegisterCourses.addEventListener('click', function () {
             var CourseName = document.getElementById('coursename').value;
             var CourseCode = document.getElementById('coursecode').value;
-            var LecturerNa = document.getElementById('lecname').value;
+            var LecturerNa = document.getElementById('lectname').value;
 
             if (CourseCode != '' && CourseName != '' && LecturerNa != '') {
                 $.ajax({
@@ -418,6 +460,7 @@
                     complete: function (feed) {
                         if (feed.responseText == 'courses_registered') {
                             alert('Course Registered');
+                            window.location.href = '../dashboard';
                         }
                     }
                 });
@@ -426,7 +469,5 @@
             }
         });
     }
-
-
 
 })();

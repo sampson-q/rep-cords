@@ -282,7 +282,6 @@
         public function UpdateCourseDetails($coursenameEdit, $coursecodeEdit, $lectnameEdit, $recforup) {
             try {
                 $query = $this -> connection -> prepare("UPDATE `registered_courses` SET `courses_code` = :coursecode, `courses_name` = :coursename, `lecturer_name` = :lectname WHERE `registered_courses`.`id` = :idchange;");
-                //$query = $this -> connection -> prepare("UPDATE registered_courses SET courses_code = :coursecode, courses_name = :coursename, lecturer_name = :lectname WHERE id = :idchange");
                 $query -> execute([
                     'coursecode' => $coursecodeEdit,
                     'coursename' => $coursenameEdit,
@@ -316,6 +315,20 @@
                 $query -> execute([
                     'unshare' => $class4unshare
                 ]);
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        // unregister a course
+        public function UnregisterCourse($recordid) {
+            try {
+                $query = $this -> connection -> prepare('DELETE FROM registered_courses WHERE id= :recid');
+                $query -> execute([
+                    'recid' => $recordid
+                ]);
+
                 return true;
             } catch (Exception $e) {
                 die ('Error: ' . $e -> getMessage());
@@ -422,5 +435,35 @@
             }
         }
 
+        // save attendace details
+        public function SaveAttendanceDetails($AttendName, $RepName) {
+            try {
+                $query = $this -> connection -> prepare("INSERT INTO `all_attendance` (`id`, `attend_names`, `class_names`, `taken_by`) VALUES (NULL, :attname, :classname, :takenby)");
+                $query -> execute([
+                    'attname' => $AttendName,
+                    'takenby' => $RepName,
+                    'classname' => $_SESSION['class2show'],
+                ]);
+
+            } catch (Exception $e) {
+                die('Error: ' . $e -> getMessage());
+            }
+        }
+
+        // remove attendance
+        public function RemoveAttendance($AttendanceId, $AttendanceName) {
+            try {
+                $query = $this -> connection -> prepare("DELETE FROM `all_attendance` WHERE `all_attendance`.`id` = :attid");
+                $query -> execute(['attid' => $AttendanceId]);
+
+                //$filename = $_FILES[$AttendanceName]['name'];
+
+                rename("../attends/$AttendanceName", "../cachedattends/$AttendanceName");
+                //move_uploaded_file($filename, "../cached_attends/$AttendanceName");
+
+            } catch (Exception $e) {
+                die('Error: ' . $e -> getMessage());
+            }
+        }
         // remember to remove 'Delete Class' option for users that class has been shared to
     }

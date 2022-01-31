@@ -1,8 +1,12 @@
 <?php
-    session_start();
+    //session_start();
     $_SESSION['signup_success'] = '';
 
     require_once '../controllers/DatabaseConnection.php';
+    require_once '../controllers/CrudOperation.php';
+
+    $crud = new CrudOperation();
+
     if (empty($_SESSION['login_success']) || $_SESSION['login_success'] == 0) {
         $_SESSION['session_timeout'] = 1;
         echo '<script>window.location.href = "../index.php";</script>';
@@ -11,6 +15,8 @@
     $db = new DatabaseConnection('localhost', 'root', '');
     $connection = $db -> ConnectDB();
 
+    require('../fpdf183/fpdf.php');
+    $pdf = new FPDF();
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +29,7 @@
         <link href="../css/index.css" rel="stylesheet" type="text/css" />
         <link href="index.css" rel="stylesheet" type="text/css" />
         <link href="../css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="../css/bootstrap.min.css" />
         <link href="material-icons-0.2.1/iconfont/material-icons.css" rel="stylesheet" type="text/css"/>
@@ -137,7 +144,7 @@
                                                 <input type="hidden" value="<?php echo $_SESSION['student_id'] . '_' . $result['class_names'] ?>" name="class2operate" id="class2operate">
                                                 <input type="hidden" value="<?php echo $result['class_names'] ?>" name="classname" id="classname" />
                                                 <td><?php echo $counter; ?></td>
-                                                <td><?php echo $result['class_names']; ?></td>
+                                                <td width=""><?php echo $result['class_names']; ?></td>
                                                 <td><input id="viewclassmembers" name="viewclassmembers" type="submit" class="btn btn-success" value="View" /></td>
                                                 <td><input id="deleteclass" name="deleteclass" type="submit" class="btn btn-danger" value="Delete" /></td>
                                             </form>
@@ -190,15 +197,15 @@
                             </form>
                             
                             <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
-                            <table class="table">
-                                <tr>
-                                    <td>S/N</td>
-                                    <td align="center">Student Name</td>
-                                    <td align="center">Student ID</td>
-                                    <td>Options</td>
-                                    <td></td>
-                                </tr>
-                            </table>
+                                <table class="table">
+                                    <tr>
+                                        <td>S/N</td>
+                                        <td align="center">Student Name</td>
+                                        <td align="center">Student ID</td>
+                                        <td>Options</td>
+                                        <td></td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                         <div>
@@ -627,6 +634,7 @@
                     if ($query -> rowCount() > 0) { ?>
                         <div style="color: white;">
                             <div id="table-header-div" class="">
+                                <h3 align="center" style="color: white;">Attendances for <?php echo explode("_", $_SESSION['class2show'], 2)[1]; ?></h3>
                                 <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
                                     <table class="table">
                                         <tr>
@@ -643,15 +651,21 @@
                             <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
                                 <table class="table table-responsive" style="color: white;">
                                     <tr id="table-body-div">
-                                    <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                    <?php $counter = 1; while ($result = $query -> fetch()) {
+                                        $firstcut = explode("-", $result['attend_names'], 3)[1];
+                                        $seconcut = explode("-", $result['attend_names'], 3)[2];
+                                        $thirdcut = explode(".", $seconcut, 2)[0];
+                                        ?>
                                         <tr align="center">
                                             <td><?php echo $counter; ?></td>
-                                            <td width="500"><?php echo $result['attend_names']; ?></td>
+                                            <td width="300"><?php echo "[$firstcut] ---> [$thirdcut ]"; ?></td>
                                             <td><?php echo $result['taken_by']; ?></td>
                                             <form action="" method="POST">
-                                                <input type="hidden" name="sn" id="sn" value="<?php echo $result['id']; ?>" />
-                                                <td><input id="updatemember" name="updatemember" type="submit" id="tableButton" class="btn btn-success" value="View" /></td>
-                                                <td><input id="removemember" name="removemember" type="submit" id="tableButton"class="btn btn-danger" value="Delete" /></td>
+                                                <input type="hidden" name="snatt" id="snatt" value="<?php echo $result['id']; ?>" />
+                                                <input type="hidden" name="attn" id="attn" value="<?php echo $result['attend_names']; ?> " />
+                                                <input type="hidden" name="attname" id="attname" value="<?php echo $firstcut . " @ " . $thirdcut ?>" />
+                                                <td><a href="../attends/<?php echo $result['attend_names']; ?>" target="_blank" class="btn btn-success">View</a></td>
+                                                <td><input id="deleatt" name="deleatt" type="submit" id="tableButton"class="btn btn-danger" value="Delete" /></td>
                                             </form>
                                         </tr>
                                     <?php $counter += 1; } ?>
@@ -664,25 +678,34 @@
                             </div>
                             </div>
                         </div>
-                        <?php } else { echo '<h2 style="color: white;">Attendances will show here<h2>
+                        <?php } else { echo '<h2 style="color: white;">Attendances will show here if any<h2>
                                             <tr align="right">
                                                 <td><div class="col-xs-8"></div></td>
                                                 <td><div id="takeattendance" class="btn btn-primary">Take Attendance</div></td>
                                             </tr>';}
                 }
             ?>
+            <input type="hidden" value="<?php echo $ClassType; ?>" id="classtype">
         </div>
 
-        <div style="display: none;" class="container-fluid col-xs-6" id="TakeAttendance">
-            <?php
-                if (isset($_SESSION['class2show']) && !empty($_SESSION['class2show'])) {
-                    $query = $connection -> prepare('SELECT * FROM `repnotes`.:classname');
-                    $query -> execute([
-                        'classname' => $_SESSION['class2show']
-                    ]);
-                }
-            ?>
-        </div>
+        <?php
+            if (isset($_POST['deleatt'])) { 
+                echo '<script>document.getElementById("ViewClassContents").style = "display: block;";</script>';
+                echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
+                $attname = filter_input(INPUT_POST, 'attname');
+                $att2rem = filter_input(INPUT_POST, 'snatt');
+                $att2move = filter_input(INPUT_POST, 'attn');
+                ?>
+            
+                <div style="color: white; text-align: center; display: block;" id="alert-box" class="container-fluid">
+                    <h4>This action cannot be undone! Do you wish to remove <?php echo strtoupper($attname) ?>?</h4>
+                    
+                    <input type="hidden" value="<?php echo $att2rem ?>" id="att2rem" />
+                    <input type="hidden" value="<?php echo $att2move?>" id="att2move" />
+                    <div id="cancelclassremove" class="btn btn-primary">Cancel</div>
+                    <div name="proceedattrem" id="proceedattrem" class="btn btn-danger">Delete</div>
+                </div>
+        <?php } ?>
 
         <div style="display: none;" class="container-fluid col-xs-6" id="Courses">
             <?php
@@ -717,9 +740,9 @@
                                 <table class="table table-responsive" style="color: white;">
                                     <tr id="table-body-div">
                                     <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                        <tr align="center">
+                                        <tr align="">
                                             <td><?php echo $counter; ?></td>
-                                            <td width="500"><?php echo $result['courses_name']; ?></td>
+                                            <td width="250"><?php echo $result['courses_name']; ?></td>
                                             <td><?php echo $result['courses_code']; ?></td>
                                             <td><?php echo $result['lecturer_name']; ?></td>
                                             <form action="" method="POST">
@@ -747,47 +770,340 @@
                                             <td><div id="registercourses" class="btn btn-primary">Register Courses</div></td>
                                         </tr>';}?>
         </div>
+        
+        <div style="display: none;" class="container-fluid col-xs-6" id="RegisterCourses">
+            <fom role="">
+                <div class="form-group">
+                    <label for="coursecode">Course Code:</label>
+                    <input type="text" class="form-control" id="coursecode" placeholder="Course Code" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="coursename">Course Name:</label>
+                    <input type="text" class="form-control" id="coursename" placeholder="Course Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lectname">Lecturer Name:</label>
+                    <input type="text" class="form-control" id="lectname" placeholder="Lecturer Name" required>
+                </div>
+
+                <input type="submit" class="btn btn-primary form-control" value="Register Course" name="registercoursebutton" id="registercoursebutton"> 
+            </form>
+        </div>
+
+        <div style="display: none;" class="" id="TakeAttendance">
+            <?php
+                $qr = $connection -> prepare('SELECT * FROM registered_courses WHERE student_id = :userid');
+                
+                if (isset($_SESSION['class2show']) && !empty($_SESSION['class2show'])) {
+                    $query = $connection -> prepare("SELECT * FROM `repnotes`.`:classtoshow`");
+                    $query -> execute([
+                        'classtoshow' => strtolower($_SESSION['class2show'])
+                    ]);
+                }
+                $qr -> execute([
+                    'userid' => $_SESSION['student_id']
+                ]);
+
+                if ($qr -> rowCount() > 0) { ?>
+                    <div class="container-fluid col-xs-6">
+                        <form method="POST">
+                            <select style="margin-top: 12px;" id="coursecode" name="coursecode" required>
+                                <option value="" selected disabled>Select Course</option>
+                                <?php while ($res = $qr -> fetch()) { ?>
+                                    <option value="<?php echo $res['courses_name'] . '=' . $res['courses_code'] . '=' . $res['lecturer_name']; ?>"><?php echo $res['courses_name'] . ' (' . $res['courses_code'] . ')'; ?></option>
+                                <?php } ?>
+                            </select>
+                            <input type="date" name="coursedate" id="coursedate" required />
+                                                        
+                            <div class="container text-center table-responsive">
+                                <table class="table text-center" style="color: white; margin-top: 15px;">
+                                    <thead>
+                                        <tr style="font-weight: bold;">
+                                            <td>S/N</td>
+                                            <td>STUDENT NAME</td>
+                                            <td>STUDENT ID</td>
+                                            <td>ATTENDANCE</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="classtable">
+                                    <?php
+                                        $counter = 1; while($result = $query -> fetch()) {
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $counter ?></td>
+                                        <td><?php echo $result['studentname'] ?></td>
+                                        <td><?php echo $result['studentid'] ?></td>
+                                        <td><input type="checkbox" name="attStatus[]" value="<?php echo $result['studentid']; ?>" /></td>
+                                    </tr>
+                                    <?php
+                                        $counter += 1; }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-xs-12" style="height: 15px;"></div>
+                            <div class="col-xs-12" align="right">
+                                <!--<input type="submit" value="Submit Attendance" name="submitattendance" id="submitattendance" class="btn btn-primary" /> -->
+                                <button id="submitattendance" name="submitattendance" class="btn btn-primary">Submit Attendance</button>
+                            </div>
+                        </form>
+                    </div>
+                <?php } else { echo '<h2 style="color: white;">Register a course before you can take attendance<h2>
+                                    <tr align="right">
+                                        <td><div class="col-xs-8"></div></td>
+                                        <td><div id="registercourses" class="btn btn-primary">Register Course</div></td>
+                                    </tr>';}
+                ?>
+        </div>
+
+        <?php
+            $qr = $connection -> prepare('SELECT * FROM person WHERE id = :userid');
+            $qr -> execute([
+                'userid' => $_SESSION['student_id']
+            ]);
+
+            $repName = '';
+            $attendanceFile = '';
+            
+            if ($qr -> rowCount() > 0) {
+                while ($res = $qr -> fetch()) {
+                    $repName = $res['firstname'] . ' ' . $res['middlename'];
+                    $programme = strtoupper($res['program_type']);
+                }
+            }
+
+            if (isset($_POST['submitattendance'])) {
+                if (isset($_SESSION['class2show']) && !empty($_SESSION['class2show'])) {
+                    $query = $connection -> prepare("SELECT * FROM `repnotes`.`:classtoshow`");
+                    $query -> execute([
+                        'classtoshow' => strtolower($_SESSION['class2show'])
+                    ]);
+                }              
+
+                date_default_timezone_set('Africa/Accra');
+                $genDate = date('d/m/Y');
+                $genTime = date('H:i:s');
+
+                $raw_date = filter_input(INPUT_POST, 'coursedate');
+
+                $coursedets = filter_input(INPUT_POST, 'coursecode');                  
+                $course_name = explode('=', $coursedets, 3)[0];
+                $course_code = explode('=', $coursedets, 3)[1];
+                $course_date = explode("-", $raw_date, 3)[2] . '/' . explode("-", $raw_date, 3)[1] . '/' . explode("-", $raw_date, 3)[0];
+                $lecName = explode("=", $coursedets, 3)[2];
+
+                $filename_date = explode("-", $raw_date, 3)[2] . '_' . explode("-", $raw_date, 3)[1] . '_' . explode("-", $raw_date, 3)[0];
+                $attendanceFile = explode("_", $_SESSION['class2show'], 2)[1] . ' Att. - ' . $course_code . ' - ' . $filename_date . '.pdf';
+            } ?>
+            
+            <?php if (isset($attendanceFile) && $attendanceFile != '') {
+                if (!empty($_POST['attStatus'])) {
+                    if (file_exists("../attends/$attendanceFile")) {
+                        // tells the user that attendance file already exists.
+                        echo "<script>alert('Attendance Error! Attendance for $course_code on $course_date already exist.');</script>";
+                    } else { // else
+                        // call on $pdf to create a portrait page of a size of A4
+                        $pdf -> AddPage('P', 'A4');
+    
+                        $pdf -> SetFont('Arial', 'I', 8);
+                        $pdf -> Text(8, 292, "$course_code @ $course_date");
+                        $pdf -> Text(180, 292, "zeroth-exodus");
+                        
+                        // set the font face to Arial, underline and bolden the font, and a size to 10
+                        $pdf -> SetFont('Arial', 'UB', 10);
+                        $pdf -> Cell(0, 10, "$programme", 0, 10, 'C'); // creates the "COMPUTER SCIENCE 1A" heading
+                        $pdf -> Cell(0, 0, "ATTENDANCE SHEET", 0, 10, 'C'); // creates the "ATTENDANCE SHEET" sub heading
+                        
+                        // re-set the font. this time, no underline
+                        $pdf -> SetFont('Arial', 'B', 10);
+                        $pdf -> Text(17, 28, 'Lecturer: '); // creates the Lecturer label
+                        $pdf -> Text(140, 28, 'Lecture Date: '); // Lecture Date label
+                        $pdf -> Text(17, 34, 'Date Generated: ');
+                        $pdf -> Text(140, 34, 'Taken By: ');
+                        $pdf -> Text(17, 40, 'Course Name: ');
+                        $pdf -> Text(140, 40, 'Course Code: ');
+    
+                        // re-sets the font. this time, no bold
+                        $pdf -> SetFont('Arial', '', 10);
+                        $pdf -> Text(35, 28, $lecName); // add the Name of the Lecturer
+                        $pdf -> Text(164, 28, $course_date); // adds the lecture date
+                        $pdf -> Text(46, 34, $genDate . ' @ ' . $genTime); // adds the date@time at which the attendance was taken
+                        $pdf -> Text(159, 34, $repName); // adds who took the attendance
+                        $pdf -> Text(42, 40, $course_name); // adds the course name
+                        $pdf -> Text(164, 40, $course_code); // adds the course code
+    
+                        // creates the head of the table
+                        $pdf -> Text(17, 48, '------------------------------------------------------------------------------------------------------------------------------------------------');
+                        $pdf -> Text(17, 51, '| S/N |                                      NAME OF STUDENT                                                    |        STUDENT ID       |');
+                        $pdf -> Text(17, 54, '------------------------------------------------------------------------------------------------------------------------------------------------');
+    
+                        $y = 54; // initializing the line number
+                        $sn = 1; // initializing the stockiometric number o s3 d3in d3in o
+                        $page = 1;
+                        $pager = 1;
+    
+                        $pdf -> Text(103, 292, $page);
+    
+                        while ($result = $query -> fetch()) {
+                            foreach ($_POST['attStatus'] as $presentStudents) {
+                                if ($result['studentid'] == $presentStudents) {
+                                    if ($page == 1) {
+                                        // this is to help create another page if a page gets full.
+                                        if ($sn % 39 == 0) {
+                                            $y = 10; // value of line number is initialized to 10
+                                            // fill the page with the neccessary values; like the name, id and $sn of a selected student
+                                            $pdf -> AddPage('P', 'A4');
+                                            $page += 1;
+                                            $pdf -> Text(17, 11, '------------------------------------------------------------------------------------------------------------------------------------------------');
+                                            
+                                            if ($sn <= 9) {
+                                                $pdf -> Text(17, $y + 4, '|   ' . $sn . '   |');
+                                            } elseif ($sn <= 99) {
+                                                $pdf -> Text(17, $y + 4, '|  ' . $sn . '  |');
+                                            } elseif ($sn >= 100) {
+                                                $pdf -> Text(17, $y + 4, '| ' . $sn . ' |');
+                                            }
+    
+                                            $pdf -> Text(30, $y + 4, '  ' . $result['studentname']);
+                                            $pdf -> Text(100, $y + 4, '                                                  |         ' . $presentStudents . '        |');
+                                            $pdf -> Text(17, $y + 7, '------------------------------------------------------------------------------------------------------------------------------------------------');
+                                            
+                                            $pdf -> SetFont('Arial', 'I', 8);
+                                            $pdf -> Text(8, 292, "$course_code @ $course_date");
+                                            $pdf -> Text(180, 292, "zeroth-exodus");
+                                            $pdf -> SetFont('Arial', '', 10);
+                                            $pdf -> Text(103, 292, $page);
+    
+                                            
+                                            $y += 6; // this code is familiar
+                                            $sn += 1; // this code is familiar
+    
+                                        } else {
+                                            if ($sn <= 9) {
+                                                $pdf -> Text(17, $y + 4, '|   ' . $sn . '   |');
+                                            } elseif ($sn <= 99) {
+                                                $pdf -> Text(17, $y + 4, '|  ' . $sn . '  |');
+                                            } elseif ($sn >= 100) {
+                                                $pdf -> Text(17, $y + 4, '| ' . $sn . ' |');
+                                            }
+    
+                                            $pdf -> Text(30, $y + 4, '  ' . $result['studentname']);
+                                            $pdf -> Text(100, $y + 4, '                                                  |         ' . $presentStudents . '        |');
+                                            $pdf -> Text(17, $y + 7, '------------------------------------------------------------------------------------------------------------------------------------------------');
+                                            
+                                            $y += 6; // this code is familiar
+                                            $sn += 1; // this code is familiar
+                                        }
+                                    } else {
+                                        // this is to help create another page if a page gets full.
+                                        if ($pager % 45 == 0) {
+                                            $y = 10; // value of line number is initialized to 10
+                                            // fill the page with the neccessary values; like the name, id and $sn of a selected student
+                                            $pdf -> AddPage('P', 'A4');
+                                            $page += 1;
+                                            $pdf -> Text(17, 11, '------------------------------------------------------------------------------------------------------------------------------------------------');
+                                            
+                                            if ($sn <= 9) {
+                                                $pdf -> Text(17, $y + 4, '|   ' . $sn . '   |');
+                                            } elseif ($sn <= 99) {
+                                                $pdf -> Text(17, $y + 4, '|  ' . $sn . '  |');
+                                            } elseif ($sn >= 100) {
+                                                $pdf -> Text(17, $y + 4, '| ' . $sn . ' |');
+                                            }
+    
+                                            $pdf -> Text(30, $y + 4, '  ' . $result['studentname']);
+                                            $pdf -> Text(100, $y + 4, '                                                  |         ' . $presentStudents . '        |');
+                                            $pdf -> Text(17, $y + 7, '------------------------------------------------------------------------------------------------------------------------------------------------');
+                                            
+                                            $pdf -> SetFont('Arial', 'I', 8);
+                                            $pdf -> Text(8, 292, "$course_code @ $course_date");
+                                            $pdf -> Text(180, 292, "zeroth-exodus");
+                                            $pdf -> SetFont('Arial', '', 10);
+                                            $pdf -> Text(103, 292, $page);
+                                            
+                                            $y += 6; // this code is familiar
+                                            $sn += 1; // this code is familiar
+                                            $pager += 1;
+    
+                                        } else {
+                                            if ($sn <= 9) {
+                                                $pdf -> Text(17, $y + 4, '|   ' . $sn . '   |');
+                                            } elseif ($sn <= 99) {
+                                                $pdf -> Text(17, $y + 4, '|  ' . $sn . '  |');
+                                            } elseif ($sn >= 100) {
+                                                $pdf -> Text(17, $y + 4, '| ' . $sn . ' |');
+                                            }
+    
+                                            $pdf -> Text(30, $y + 4, '  ' . $result['studentname']);
+                                            $pdf -> Text(100, $y + 4, '                                                  |         ' . $presentStudents . '        |');
+                                            $pdf -> Text(17, $y + 7, '------------------------------------------------------------------------------------------------------------------------------------------------');
+                                            
+                                            $y += 6; // this code is familiar
+                                            $sn += 1; // this code is familiar
+                                            $pager += 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        $pdf -> Output('F', $attendanceFile);
+                        // here, we move the file from this location to the attendance-sheets folder
+                        rename("$attendanceFile", "../attends/$attendanceFile");
+                        $crud -> SaveAttendanceDetails($attendanceFile, $repName);
+                        // alert the user of a successful attendance generation
+                        echo '<script>alert("Attendance Taken!");window.location.href = "../dashboard";</script>';
+                    }
+                } else {echo '<script>alert("Attendance Error! No student selected!");</script>';}
+            }
+        ?>
 
         <?php
             if (isset($_POST['updatecourses'])) {
                 $sn = (int) filter_input(INPUT_POST, 'snid');
-                $coursenameEdit = filter_input(INPUT_POST, 'coursenameEdit');
-                $coursecodeEdit = filter_input(INPUT_POST, 'coursecodeEdit');
-                $LecturnameEdit = filter_input(INPUT_POST, 'lecturnameEdit');
-
-                $backname = filter_input(INPUT_POST, 'coursenameEdit');
-                $backcode = filter_input(INPUT_POST, 'coursecodeEdit');
-                $backlect = filter_input(INPUT_POST, 'lecturnameEdit');
-
+                $updateCourseName = filter_input(INPUT_POST, 'coursenameEdit');
+                $updateCourseCode = filter_input(INPUT_POST, 'coursecodeEdit');
+                $updateLectName = filter_input(INPUT_POST, 'lecturnameEdit');
                 echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
             ?>
-            <div class="container-fluid col-xs-6" id="Individuals">
-                <form role="form">
-                    <input type="hidden" name="recforup" id="recforup" value="<?php echo $sn ?>" />
-                    <input type="hidden" name="backname" id="backname" value="<?php echo $backname ?>" />
-                    <input type="hidden" name="backcode" id="backcode" value="<?php echo $backcode ?>" />
-                    <input type="hidden" name="backlect" id="backlect" value="<?php echo $backlect ?>" />
+                <div class="container-fluid col-xs-6" id="UpdateCourses">
+                    <form role="form">
+                        <input type="hidden" name="recforup" id="recforup" value="<?php echo $sn; ?>" />
 
-                    <div class="form-group">
-                        <label for="updatecoursecode">Course Code:</label>
-                        <input type="text" class="form-control" id="updatecoursecode" value="<?php echo $coursecodeEdit; ?>" name="updatecoursecode" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="coursecode">Course Code:</label>
+                            <input type="text" class="form-control" id="updatecoursecode" name="updatecoursecode" value="<?php echo $updateCourseCode; ?>" />
+                        </div>
 
-                    <div class="form-group">
-                        <label for="updatecoursename">Course Name:</label>
-                        <input type="text" class="form-control" id="updatecoursename" name="updatecoursename" value="<?php echo $coursenameEdit; ?>" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="coursename">Course Name:</label>
+                            <input type="text" class="form-control" id="updatecoursename" name="updatecoursename" value="<?php echo $updateCourseName; ?>" />
+                        </div>
 
-                    <div class="form-group">
-                        <label for="updatelecname">Lecturer Name:</label>
-                        <input type="text" class="form-control" id="updatelecname" name="updatelecname" value="<?php echo $LecturnameEdit; ?>" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="lectname">Lecturer Name:</label>
+                            <input type="text" class="form-control" id="updatelectname" name="updatelectname" value="<?php echo $updateLectName; ?>" />
+                        </div>
 
-                    <input type="submit" class="form-control btn btn-primary" value="Update Course" id="updatecourse" name="updatecourse"/>
-                </form>
+                        <input type="submit" class="btn btn-primary form-control" value="Update Course" name="courseupdate" id="courseupdate">
+                    </form>
+                </div>
+            <?php } else if (isset($_POST['removecourses'])) {
+            $sn = (int) filter_input(INPUT_POST, 'snid');
+            $updateCourseName = filter_input(INPUT_POST, 'coursenameEdit');
+            echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
+            ?>
+            <div style="color: white; text-align: center; display: block;" id="alert-box" class="container-fluid col-xs-12">
+                <h4>This action cannot be undone!<p>Do you wish to remove <strong><?php echo $updateCourseName ?> </strong> from your registered courses?</h4>
+        
+                <input type="hidden" value="<?php echo $sn ?>" id="recordtoremove" />
+                <div id="cancelclassremove" class="btn btn-primary">Cancel</div>
+                <div name="proceedcourserem" id="proceedcourserem" class="btn btn-danger">Delete</div>
             </div>
         <?php } ?>
-
 
         <script src="../js/index.js"></script>
         <script src="index.js"></script>

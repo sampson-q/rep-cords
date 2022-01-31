@@ -79,13 +79,7 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label for="programme">Programme:</label>
-                                        <select class="form-control" id="programme" name="programme" required>
-                                            <option value="" selected disabled>Choose</option>
-                                            <option value="HND">HND</option>
-                                            <option value="BTECH">BTECH</option>
-                                            <option value="DEGREE">DEGREE</option>
-                                            <option value="DIPLOMA">DIPLOMA</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="programme" name="programme" placeholder="Enter programme" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="class">Class:</label>
