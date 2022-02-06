@@ -455,12 +455,9 @@
             try {
                 $query = $this -> connection -> prepare("DELETE FROM `all_attendance` WHERE `all_attendance`.`id` = :attid");
                 $query -> execute(['attid' => $AttendanceId]);
-
-                //$filename = $_FILES[$AttendanceName]['name'];
-
+                
                 rename("../attends/$AttendanceName", "../cachedattends/$AttendanceName");
-                //move_uploaded_file($filename, "../cached_attends/$AttendanceName");
-
+                rename("../cachedattends/$AttendanceName", "../cachedattends/" . explode(".pdf", $AttendanceName, 2)[0] . " -- " . time() . ".pdf");
             } catch (Exception $e) {
                 die('Error: ' . $e -> getMessage());
             }
