@@ -151,8 +151,6 @@
                     if (feed.responseText == 'attend_removed') {
                         alert("Attendance Removed!");
                     }
-                    
-                    alert(feed.responseText);
                     window.location.href = "../dashboard";
                 }
             });
@@ -429,6 +427,14 @@
     if (Courses) {
         Courses.addEventListener('click', function () {
             swapView('DashHome', 'Courses');
+        });
+    }
+
+    //show attendance
+    var ShowAttendance = document.getElementById('showatt');
+    if (ShowAttendance) {
+        ShowAttendance.addEventListener('click', function () {
+            swapView('DashHome', 'ShowAttendance');
         });
     }
 
