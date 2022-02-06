@@ -94,7 +94,7 @@
 
                 <div class="col-xs-1" align="center"></div>
                 
-                <div id="viewclass" name="viewclass" class="btn col-xs-3" style="font-size: 24px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                <div id="showatt" name="showatt" class="btn col-xs-3" style="font-size: 24px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
                     View Attend.
                 </div>
 
@@ -157,6 +157,52 @@
                         <div class="col-xs-12" align="right">
                             <div id="classadd" class="btn btn-primary">Add Class</div>
                         </div>
+                    </div>
+                    
+                <?php } else { echo '<h2 style="color: white;">Your classes will show here if you have any!<h2>
+                                    <tr align="right">
+                                        <td><div class="col-xs-8"></div></td>
+                                        <td><div id="classadd" class="btn btn-primary">Add Class</div></td>
+                                    </tr>'; }
+            ?>
+        </div>
+
+        <div style="display: none;" class="container-fluid col-xs-6" id="ShowAttendance">
+            <?php
+                $query = $connection -> prepare("SELECT * FROM `all_class` WHERE student_id = :userId");
+                $query -> execute([
+                    'userId' => $_SESSION['student_id']
+                ]);
+
+                if ($query -> rowCount() > 0) { ?>
+                    <div style="color: white;">
+                        <div id="table-header-div" class="col-xs-12">
+                            <h2 align="center">View Attendance</h2>
+                            <hr>
+                            <div id="table-heads" style="font-weight: bold; margin-top: -12px;">
+                                <div class="col-xs-2">S/N</div>
+                                <div align="" class="col-xs-4">Class Name</div>
+                                <div class="col-xs-1"></div>
+                                <div align="center" class="col-xs-3">Option</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 fixTableHead" style="margin-top: 10px;">
+                            <table class="table table-responsive" style="color: white;">
+                                <tr id="table-body-div">
+                                    <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                        <tr align="center" id="table-bodys">
+                                            <form action="" method="POST" role="form">    
+                                                <input type="hidden" value="<?php echo $_SESSION['student_id'] . '_' . $result['class_names'] ?>" name="attendance-class" id="attendance-class">
+                                                <td><?php echo $counter; ?></td>
+                                                <td width=""><?php echo $result['class_names']; ?></td>
+                                                <td><input id="vattendance" name="vattendance" type="submit" class="btn btn-success" value="View Attendance" /></td>
+                                            </form>
+                                        </tr>
+                                    <?php $counter += 1; } ?>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-12" style="height: 15px;"></div>
                     </div>
                     
                 <?php } else { echo '<h2 style="color: white;">Your classes will show here if you have any!<h2>
@@ -493,7 +539,7 @@
                                                 <td><?php echo $result['shared_by']; ?></td>
                                                 <input type="hidden" name="sn0" id="sn0" value="<?php echo $result['id']?>" />
                                                 <input type="hidden" id="class2operate" name="class2operate" value="<?php echo $result['shared_by'] . '_' . $result['class_names'];?>" />
-                                                <input type="hidden" id="class_shared0" name="class_shared0" value="<?php echo $result['class_names']?>" />
+                                                <input type="hidden" id="class_shared0" name="class_shared0" value="<?php echo $result['class_names'];?>" />
                                                 <td><input id="viewrev" name="viewrev" type="submit" class="btn btn-success" value="View" /></td>
                                                 <td><input id="undoshare" name="undoshare" type="submit" class="btn btn-danger" value="Undo Share" /></td>
                                             </form>
@@ -623,6 +669,7 @@
             <?php
                 if (isset($_POST['vattendance'])) {
                     $ClassType = filter_input(INPUT_POST, 'attendance-class');
+                    $Container = filter_input(INPUT_POST, 'container');
                     echo '<script>document.getElementById("ViewAttendance").style = "display: block;";</script>';
                     echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
 
@@ -662,9 +709,9 @@
                                             <td><?php echo $result['taken_by']; ?></td>
                                             <form action="" method="POST">
                                                 <input type="hidden" name="snatt" id="snatt" value="<?php echo $result['id']; ?>" />
-                                                <input type="hidden" name="attn" id="attn" value="<?php echo $result['attend_names']; ?> " />
+                                                <input type="hidden" name="attn" id="attn" value="<?php echo $result['attend_names']; ?>" />
                                                 <input type="hidden" name="attname" id="attname" value="<?php echo $firstcut . " @ " . $thirdcut ?>" />
-                                                <td><a href="../attends/<?php echo $result['attend_names']; ?>" target="_blank" class="btn btn-success">View</a></td>
+                                                <td><a href="../attends/<?php echo $result['attend_names'];?>" target="_blank" class="btn btn-success">View</a></td>
                                                 <td><input id="deleatt" name="deleatt" type="submit" id="tableButton"class="btn btn-danger" value="Delete" /></td>
                                             </form>
                                         </tr>
@@ -700,8 +747,8 @@
                 <div style="color: white; text-align: center; display: block;" id="alert-box" class="container-fluid">
                     <h4>This action cannot be undone! Do you wish to remove <?php echo strtoupper($attname) ?>?</h4>
                     
-                    <input type="hidden" value="<?php echo $att2rem ?>" id="att2rem" />
-                    <input type="hidden" value="<?php echo $att2move?>" id="att2move" />
+                    <input type="hidden" value="<?php echo $att2rem;?>" id="att2rem" />
+                    <input type="hidden" value="<?php echo $att2move;?>" id="att2move" />
                     <div id="cancelclassremove" class="btn btn-primary">Cancel</div>
                     <div name="proceedattrem" id="proceedattrem" class="btn btn-danger">Delete</div>
                 </div>
