@@ -203,6 +203,9 @@
                                     alert('Member with ID ' + StudentId + ', is already a member');
                                 }
 
+                                swapView('DashHome', 'AddClassMembers');
+                                document.getElementById('DashHome').style = 'display: none';
+                                document.getElementById('AddClassMembers').style = 'display: block';
                                 //alert(feed.responseText);
                             }
                         });

@@ -1,6 +1,7 @@
 <?php
     //session_start();
     $_SESSION['signup_success'] = '';
+    error_reporting(E_ERROR | E_PARSE);
 
     require_once '../controllers/DatabaseConnection.php';
     require_once '../controllers/CrudOperation.php';
@@ -67,20 +68,20 @@
         <div id="DashHome" class="container-fluid col-xs-6" style="margin-top: 60px;">
             <div class="col-xs-12">
                
-                <div id="addclass" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                <div id="addclass" class="btn col-xs-3" style="font-size: ; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
                     Add Class
                 </div>
 
                 <div class="col-xs-1" align="center"></div>
                 
-                <div id="viewclass" name="viewclass" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
-                    View Class
+                <div id="viewclass" name="viewclass" class="btn col-xs-3" style="font-size: ; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                    View Classes
                 </div>
 
                 <div class="col-xs-1" align="center"></div>
 
-                <div id="shared-class" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;">
-                    Exp. Class
+                <div id="shared-class" class="btn col-xs-3" style="font-size: ; color: white; box-shadow: 0px 0px 1px #ccc;">
+                    Exported Class
                 </div>
             </div>
             
@@ -88,20 +89,20 @@
             
             <div class="col-xs-12">
                 
-                <div id="inheritted-class" class="btn col-xs-3" style="font-size: 25px; color: white; box-shadow: 0px 0px 1px #ccc;" align="">
-                    Imp. Class
+                <div id="inheritted-class" class="btn col-xs-3" style="font-size: ; color: white; box-shadow: 0px 0px 1px #ccc;" align="">
+                    Imported Class
                 </div>
 
                 <div class="col-xs-1" align="center"></div>
                 
-                <div id="showatt" name="showatt" class="btn col-xs-3" style="font-size: 24px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
-                    View Attend.
+                <div id="showatt" name="showatt" class="btn col-xs-3" style="font-size: ; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                    View Attendance
                 </div>
 
                 <div class="col-xs-1" align="center"></div>
 
-                <div id="courses" name="courses" class="btn col-xs-3" style="font-size: 24px; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
-                    Courses
+                <div id="courses" name="courses" class="btn col-xs-3" style="font-size: ; color: white; box-shadow: 0px 0px 1px #ccc;" align="center">
+                    My Courses
                 </div>
             </div>
         </div>
@@ -650,7 +651,7 @@
         <?php } ?>
 
         <div style="display: none;" class="container-fluid col-xs-6" id="AddClassMembers">
-            <form role="form">
+            <form role="form" method="POST">
                 <div class="form-group">
                     <label for="addstudentid">Student ID :</label>
                     <input type="text" class="form-control" id="addstudentid" placeholder="Student ID" name="addstudentid" required>
@@ -664,6 +665,11 @@
                 <input type="submit" class="form-control btn btn-primary" value="Add Member" id="addmemberbutton" name="addmemberbutton"/>
             </form>
         </div>
+
+        <?php if ($_POST['addmemberbutton']) {
+            echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
+            echo '<script>document.getElementById("AddClassMembers").style = "display: block;";</script>';
+        }?>
 
         <div style="display: none;" class="container-fluid col-xs-6" id="ViewAttendance">
             <?php
@@ -698,7 +704,8 @@
                             <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
                                 <table class="table table-responsive" style="color: white;">
                                     <tr id="table-body-div">
-                                    <?php $counter = 1; while ($result = $query -> fetch()) {
+                                    <?php
+                                        $counter = 1; while ($result = $query -> fetch()) {
                                         $firstcut = explode("-", $result['attend_names'], 3)[1];
                                         $seconcut = explode("-", $result['attend_names'], 3)[2];
                                         $thirdcut = explode(".", $seconcut, 2)[0];
@@ -853,57 +860,63 @@
                     'userid' => $_SESSION['student_id']
                 ]);
 
-                if ($qr -> rowCount() > 0) { ?>
-                    <div class="container-fluid col-xs-6">
-                        <form method="POST">
-                            <select style="margin-top: 12px;" id="coursecode" name="coursecode" required>
-                                <option value="" selected disabled>Select Course</option>
-                                <?php while ($res = $qr -> fetch()) { ?>
-                                    <option value="<?php echo $res['courses_name'] . '=' . $res['courses_code'] . '=' . $res['lecturer_name']; ?>"><?php echo $res['courses_name'] . ' (' . $res['courses_code'] . ')'; ?></option>
-                                <?php } ?>
-                            </select>
-                            <input type="date" name="coursedate" id="coursedate" required />
-                                                        
-                            <div class="container text-center table-responsive">
-                                <table class="table text-center" style="color: white; margin-top: 15px;">
-                                    <thead>
-                                        <tr style="font-weight: bold;">
-                                            <td>S/N</td>
-                                            <td>STUDENT NAME</td>
-                                            <td>STUDENT ID</td>
-                                            <td>ATTENDANCE</td>
+                if ($query -> rowCount() > 0 ) {
+                    if ($qr -> rowCount() > 0) { ?>
+                        <div class="container-fluid col-xs-6">
+                            <form method="POST">
+                                <select style="margin-top: 12px;" id="coursecode" name="coursecode" required>
+                                    <option value="" selected disabled>Select Course</option>
+                                    <?php while ($res = $qr -> fetch()) { ?>
+                                        <option value="<?php echo $res['courses_name'] . '=' . $res['courses_code'] . '=' . $res['lecturer_name']; ?>"><?php echo $res['courses_name'] . ' (' . $res['courses_code'] . ')'; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <input type="date" name="coursedate" id="coursedate" required />
+                                                            
+                                <div class="container text-center table-responsive">
+                                    <table class="table text-center" style="color: white; margin-top: 15px;">
+                                        <thead>
+                                            <tr style="font-weight: bold;">
+                                                <td>S/N</td>
+                                                <td>STUDENT NAME</td>
+                                                <td>STUDENT ID</td>
+                                                <td>ATTENDANCE</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="classtable">
+                                        <?php
+                                            $counter = 1; while($result = $query -> fetch()) {
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $counter ?></td>
+                                            <td><?php echo $result['studentname'] ?></td>
+                                            <td><?php echo $result['studentid'] ?></td>
+                                            <td><input type="checkbox" name="attStatus[]" value="<?php echo $result['studentid']; ?>" /></td>
                                         </tr>
-                                    </thead>
-                                    <tbody id="classtable">
-                                    <?php
-                                        $counter = 1; while($result = $query -> fetch()) {
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $counter ?></td>
-                                        <td><?php echo $result['studentname'] ?></td>
-                                        <td><?php echo $result['studentid'] ?></td>
-                                        <td><input type="checkbox" name="attStatus[]" value="<?php echo $result['studentid']; ?>" /></td>
-                                    </tr>
-                                    <?php
-                                        $counter += 1; }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <?php
+                                            $counter += 1; }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                            <div class="col-xs-12" style="height: 15px;"></div>
-                            <div class="col-xs-12" align="right">
-                                <!--<input type="submit" value="Submit Attendance" name="submitattendance" id="submitattendance" class="btn btn-primary" /> -->
-                                <button id="submitattendance" name="submitattendance" class="btn btn-primary">Submit Attendance</button>
-                            </div>
-                        </form>
-                    </div>
-                <?php } else { echo '<h2 style="color: white;">Register a course before you can take attendance<h2>
-                                    <tr align="right">
-                                        <td><div class="col-xs-8"></div></td>
-                                        <td><div id="registercourses" class="btn btn-primary">Register Course</div></td>
-                                    </tr>';}
-                ?>
+                                <div class="col-xs-12" style="height: 15px;"></div>
+                                <div class="col-xs-12" align="right">
+                                    <!--<input type="submit" value="Submit Attendance" name="submitattendance" id="submitattendance" class="btn btn-primary" /> -->
+                                    <button id="submitattendance" name="submitattendance" class="btn btn-primary">Submit Attendance</button>
+                                </div>
+                            </form>
+                        </div>
+                    <?php } else { echo '<h2 style="color: white;">Register a course before you can take attendance<h2>
+                                        <tr align="right">
+                                            <td><div class="col-xs-8"></div></td>
+                                            <td><div id="registercourses" class="btn btn-primary">Register Course</div></td>
+                                        </tr>';}
+                    
+                    } else {echo '<h2 style="color: white;">Class members will show here if any!<h2>
+                                            <tr align="right">
+                                                <td><div class="col-xs-8"></div></td>
+                                                <td><div id="addmember" class="btn btn-primary">Add Member</div></td>
+                                            </tr>';}?>
         </div>
 
         <?php
