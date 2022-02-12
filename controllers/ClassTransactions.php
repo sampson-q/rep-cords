@@ -7,7 +7,6 @@
     */
 
     include_once './CrudOperation.php';
-    //require_once '../models/Person.php';
     $class = new Clas();
     $person = new Person();
     $crud = new CrudOperation();
