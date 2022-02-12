@@ -276,18 +276,20 @@
             var UpdateLectName = document.getElementById('updatelectname').value;
             var RecordForUpdate = document.getElementById('recforup').value;
             $.ajax({
-                url: '../models/ClassTransactions.php',
+                url: '../controllers/CourseTransactions.php',
                 method: 'POST',
                 data: {
-                    coursecodeupdate: UpdateCourseCode,
-                    coursenameupdate: UpdateCourseName,
-                    lectnameupdate: UpdateLectName,
-                    recordforupdate: RecordForUpdate
+                    coursecode: UpdateCourseCode,
+                    coursename: UpdateCourseName,
+                    courselect: UpdateLectName,
+                    courseid: RecordForUpdate,
+                    WhatToDo: 'update_course'
                 },
                 complete: function (feed) {
-                    if (feed.responseText == 'class_update_success') {
+                    if (feed.responseText == 'course_updated') {
                         alert('Course Update Successfull!');
                     }
+                    
                     //alert(feed.responseText);
                 }
             });
@@ -367,15 +369,18 @@
         UnregisterCourse.addEventListener('click', function () {
             var CourseToRemove = document.getElementById('recordtoremove').value;
             $.ajax({
-                url: '../models/ClassTransactions.php',
+                url: '../controllers/CourseTransactions.php',
                 method: 'POST',
-                data: {coursetoremove: CourseToRemove},
+                data: {
+                    WhatToDo: 'unregister_course',
+                    courseid: CourseToRemove
+                },
                 complete: function (feed) {
                     if (feed.responseText == 'course_unregistered') {
                         alert('Course Unregistered!');
-                        window.location.href = '../dashboard';
                     }
-                    
+
+                    window.location.href = '../dashboard';
                     //alert(feed.responseText);
                 }
             });
@@ -459,37 +464,32 @@
             swapView('DashHome', 'ShowAttendance');
         });
     }
-
-    // view courses
-    var RegisterCourses = document.getElementById('registercourses');
-    if (RegisterCourses) {
-        RegisterCourses.addEventListener('click', function () {
-            swapView('Courses', 'RegisterCourses');
-        });
-    }
     
     // registers courses
     var RRegisterCourses = document.getElementById('registercoursebutton');
     if (RRegisterCourses) {
         RRegisterCourses.addEventListener('click', function () {
             var CourseName = document.getElementById('coursename').value;
-            var CourseCode = document.getElementById('coursecode').value;
-            var LecturerNa = document.getElementById('lectname').value;
+            var CourseCode = document.getElementById('courseCode').value;
+            var LecturerNa = document.getElementById('lEctName').value;
 
             if (CourseCode != '' && CourseName != '' && LecturerNa != '') {
                 $.ajax({
-                    url: '../models/ClassTransactions.php',
+                    url: '../controllers/CourseTransactions.php',
                     method: 'POST',
                     data: {
-                        cname: CourseName,
-                        ccode: CourseCode,
-                        lname: LecturerNa
+                        WhatToDo: 'register_course',
+                        coursename: CourseName,
+                        coursecode: CourseCode,
+                        courselect: LecturerNa
                     },
                     complete: function (feed) {
-                        if (feed.responseText == 'courses_registered') {
+                        if (feed.responseText == 'course_registered') {
                             alert('Course Registered');
-                            window.location.href = '../dashboard';
                         }
+                        
+                        window.location.href = '../dashboard';
+                        //alert(feed.responseText);
                     }
                 });
             } else {
