@@ -228,12 +228,4 @@
         }
         return true;
     };
-
-    // button helps to add a new class
-    var AddClassButton = document.getElementById('addclass');
-    if (AddClassButton) {
-        AddClassButton.addEventListener('click', function () {
-            
-        });
-    }
 })();

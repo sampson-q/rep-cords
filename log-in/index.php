@@ -1,6 +1,5 @@
 <?php
     session_start();
-    error_reporting(E_ERROR | E_PARSE);
 
     if (!empty($_SESSION['login_success']) && $_SESSION['login_success'] == 1) {
         $_SESSION['login_issue'] = '<div class="alert alert-danger alert-dismissible">
@@ -50,7 +49,11 @@
                     <div>
                         <div style="box-shadow: 0px 0px 0px #ccc;">
                             <h5 style="color: white; height: 23px;">
-                                <?php echo $_SESSION['login_issue']; ?>
+                                <?php 
+                                    if (!empty($_SESSION['login_issue'])) {
+                                        echo $_SESSION['login_issue']; 
+                                    }
+                                ?>
                             </h5>
                         </div>
                         

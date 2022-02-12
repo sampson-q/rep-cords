@@ -16,7 +16,7 @@
     require_once '../models/Account.php';
     require_once 'DatabaseConnection.php';
     require_once '../models/Person.php';
-    require_once '../models/AddClass.php';
+    require_once '../models/Clas.php';
 
     class CrudOperation {
         private $hostname;
@@ -169,7 +169,7 @@
             }
         }
 
-        public function isClassExists($classname) {
+        public function isClassExists(Clas $class) {
             try {
                 $query = $this -> connection -> prepare("SELECT * FROM all_class WHERE student_id = :student_id");
                 $query -> execute([
@@ -178,103 +178,112 @@
 
                 if ($query -> rowCount() > 0) {
                     while ($result = $query -> fetch()) {
-                        if ($result['class_names'] == $classname) {
-                            return false;
+                        if ($result['class_names'] === ($class -> getClassNameHalf())) {
+                            return true;
                         }
                     }
                 }
                 
-                return true;
+                return false;
             } catch (Exception $e) {
                 die('Error: ' . $e -> getMessage());
             }
         }
 
-        public function AddClass(AddClass $AddClass) {
+        // add a class
+        public function AddClass(Clas $class) {
             try {
-                $query = $this -> connection -> prepare('CREATE TABLE `repnotes`.`:classname` ( `sn` INT(10) NOT NULL AUTO_INCREMENT , `studentname` VARCHAR(50) NOT NULL , `studentid` VARCHAR(10) NOT NULL , PRIMARY KEY (`sn`), UNIQUE `studentid` (`studentid`))');
+                $query = $this -> connection -> prepare('CREATE TABLE IF NOT EXISTS `repnotes`.`:classname` ( `sn` INT(10) NOT NULL AUTO_INCREMENT , `studentname` VARCHAR(50) NOT NULL , `studentid` VARCHAR(10) NOT NULL , PRIMARY KEY (`sn`), UNIQUE `studentid` (`studentid`))');
                 $query -> execute([
-                    'classname' => $AddClass -> getClassName()
+                    'classname' => $class -> getClassNameFull()
                 ]);
 
                 return true;
-            } catch (Exception $e) {
-                //
-            }
-        }
-
-        public function AddClassDetails($classname) {
-            try {
-                $query = $this -> connection -> prepare('INSERT INTO `all_class` (`id`, `student_id`, `class_names`) VALUES (NULL, :student_id, :class_name)');
-                $query -> execute([
-                    'student_id' => $_SESSION['student_id'],
-                    'class_name' => $classname
-                ]);
             } catch (Exception $e) {
                 die ('Error: ' . $e -> getMessage());
             }
         }
 
-        public function RemoveClass($tablename, $classname) {
+        // add a class
+        public function AddClassDetails(Clas $class) {
+            try {
+                $query = $this -> connection -> prepare('INSERT INTO `all_class` (`id`, `student_id`, `class_names`) VALUES (NULL, :student_id, :class_name)');
+                $query -> execute([
+                    'student_id' => $_SESSION['student_id'],
+                    'class_name' => $class -> getClassNameHalf()
+                ]);
+
+                return true;
+            } catch (Exception $e) {
+                die ('Error: ' . $e -> getMessage());
+            }
+        }
+
+        // remove a class
+        public function RemoveClass(Clas $class) {
             try {
                 $removetablequery = $this -> connection -> prepare('DROP TABLE IF EXISTS `repnotes`.`:classremove`');
                 $removetablequery -> execute([
-                    'classremove' => strtolower($tablename)
+                    'classremove' => strtolower($class -> getClassNameFull())
                 ]);
 
                 $removefromlistquery = $this -> connection -> prepare('DELETE FROM all_class WHERE student_id = :student_id AND class_names = :class_names');
                 $removefromlistquery -> execute([
                     'student_id' => strtoupper($_SESSION['student_id']),
-                    'class_names' => $classname
+                    'class_names' => $class -> getClassNameHalf()
                 ]);
 
-                
                 return true;
             } catch (Exception $e) {
                 die ('Error ' . $e -> getMessage());
             }
         }
 
-        public function isMemberExist($memberid, $classname) {
+        public function isMemberExist(Clas $class) {
             try {
-                $query = $this -> connection -> prepare('SELECT * FROM '. $classname .' WHERE studentid = ' . $memberid);
+                $query = $this -> connection -> prepare('SELECT * FROM ' . $class -> getClassNameFull() . ' WHERE studentid = ' . $class -> getMemberID());
 
                 if ($query -> rowCount() > 0) {
-                    return false;
+                    return true;
                 }
 
-                return true;
             } catch (Exception $e) {
                 die ('Error: ' . $e -> getMessage());
             }
         }
 
-        public function AddClassMember($studentid, $studentname, $studentclass) {
+        public function AddClassMember(Clas $class) {
             try {
                 $query = $this -> connection -> prepare('INSERT INTO `:student_class` (`sn`, `studentname`, `studentid`) VALUES (NULL, :student_name, :student_id)');
                 $query -> execute([
-                    'student_class' => $studentclass,
-                    'student_name' => $studentname,
-                    'student_id' => $studentid
+                    'student_class' => $class -> getClassNameFull(),
+                    'student_name' => $class -> getMemberName(),
+                    'student_id' => $class -> getMemberID()
                 ]);
+
+                return true;
             } catch (Exception $e) {
-                die ('Error: ' . $e -> getMessage());
+                if (explode(":", $e -> getMessage(), 2)[0] == 'SQLSTATE[23000]') {
+                    die ('member_exist');
+                }
             }
         }
 
-        public function UpdateMemberDetails($classforupdate, $studentname, $studentid, $recordforupdate) {
+        public function UpdateMemberDetails(Clas $class, $recordforupdate) {
             try {
                 $query = $this -> connection -> prepare("UPDATE `repnotes`.`:classname` SET `studentname` = :studentname, `studentid` = :studentid WHERE `:classname`.`sn` = :r");
                 $query -> execute([
-                    'classname' => $classforupdate,
-                    'studentname' => $studentname,
-                    'studentid' => $studentid,
+                    'classname' => $class -> getClassNameFull(),
+                    'studentname' => $class -> getMemberName(),
+                    'studentid' => $class -> getMemberID(),
                     'r' => $recordforupdate
                 ]);
 
                 return true;
             } catch (Exception $e) {
-                //die ('Error: ' . $e -> getMessage());
+                if (explode(":", $e -> getMessage(), 2)[0] == 'SQLSTATE[23000]') {
+                    die ('member_exist');
+                }
             }
         }
 
@@ -295,13 +304,14 @@
             }
         }
 
-        public function RemoveMemberDetails($class4remove, $record4remove) {
+        public function RemoveMemberDetails(Clas $class, $record4remove) {
             try {
                 $query = $this -> connection -> prepare('DELETE FROM `repnotes`.`:class4remove` WHERE `:class4remove`.`sn` = :record');
                 $query -> execute([
-                    'class4remove' => $class4remove,
+                    'class4remove' => $class -> getClassNameFull(),
                     'record' => $record4remove
                 ]);
+                
                 return true;
             } catch (Exception $e) {
                 die ('Error: ' . $e -> getMessage());
@@ -309,11 +319,11 @@
         }
 
         // unshare a class by its id
-        public function UnshareClass($class4unshare) {
+        public function UnshareClass(Clas $class) {
             try {
                 $query = $this -> connection -> prepare('DELETE FROM `repnotes`.`shared_classes` WHERE `shared_classes`.`id` = :unshare');
                 $query -> execute([
-                    'unshare' => $class4unshare
+                    'unshare' => $class -> getClassID()
                 ]);
                 return true;
             } catch (Exception $e) {
@@ -335,27 +345,13 @@
             }
         }
 
-        public function ShareClass($ShareTo, $ToShare) {
+        public function ShareClass(Person $person, Clas $class) {
             try {
                 $query = $this -> connection -> prepare('INSERT INTO `shared_classes` (`id`, `shared_by`, `shared_to`, `class_names`) VALUES (NULL, :sharedby, :sharedto, :class4share)');
                 $query -> execute([
                     'sharedby' => $_SESSION['student_id'],
-                    'sharedto' => $ShareTo,
-                    'class4share' => $ToShare
-                ]);
-                return true;
-            } catch (Exception $e) {
-                die ('Error: ' . $e -> getMessage());
-            }
-        }
-
-        // unsahre class to all users that it has been shared to
-        public function UnshareClass0($classname) {
-            try {
-                $query = $this -> connection -> prepare('DELETE FROM `repnotes`.`shared_classes` WHERE shared_by = :sharedby AND class_names = :classname');
-                $query -> execute([
-                    'sharedby' => $_SESSION['student_id'],
-                    'classname' => $classname
+                    'sharedto' => $person -> getID(),
+                    'class4share' => $class -> getClassNameHalf()
                 ]);
 
                 return true;
@@ -364,7 +360,7 @@
             }
         }
 
-        // has this class been shared to any user?
+        // is this a shared class
         public function isClassShared0($classname) {
             try {
                 $query = $this -> connection -> prepare("SELECT * FROM shared_classes WHERE shared_by = :sharedby AND class_names = :classname");
@@ -383,19 +379,19 @@
         }
 
         // is class already shared to a specific user?
-        public function isClassShared($ShareTo, $ToShare) {
+        public function isClassShared(Person $person, Clas $class) {
             try {
                 $query = $this -> connection -> prepare("SELECT * FROM shared_classes WHERE shared_by = :sharedby AND shared_to = :sharedto AND class_names = :toshare");
                 $query -> execute([
                     'sharedby' => $_SESSION['student_id'],
-                    'sharedto' => $ShareTo,
-                    'toshare' => $ToShare
-
+                    'sharedto' => $person -> getID(),
+                    'toshare' => $class -> getClassNameFull()
                 ]);
 
                 if ($query -> rowCount() > 0) {
                     return true;
                 }
+
                 return false;
             } catch (Exception $e) {
                 die ('Error: ' . $e -> getMessage());
@@ -403,11 +399,11 @@
         }
 
         // does user-to-share-class-to exist?
-        public function isShareToExist($userid) {
+        public function isShareToExist(Person $person) {
             try {
-                $query = $this -> connection -> prepare("SELECT * FROM person WHERE id = :usermail");
+                $query = $this -> connection -> prepare("SELECT * FROM person WHERE id = :userid");
                 $query -> execute([
-                    'usermail' => $userid
+                    'userid' => $person -> getId()
                 ]);
 
                 if ($query -> rowCount() > 0) {
@@ -416,7 +412,7 @@
 
                 return false;
             } catch (Exception $e) {
-                //die('Error: ' . $e -> getMessage());
+                die('Error: ' . $e -> getMessage());
             }
         }
 
@@ -437,12 +433,16 @@
 
         // save attendace details
         public function SaveAttendanceDetails($AttendName, $RepName) {
+            
+            if ($_SESSION['class2show'][9] == '_') { $class2show = $_SESSION['class2show']; }
+            else {$class2show = $_SESSION['student_id'] . '_' . $_SESSION['class2show'];}
+
             try {
                 $query = $this -> connection -> prepare("INSERT INTO `all_attendance` (`id`, `attend_names`, `class_names`, `taken_by`) VALUES (NULL, :attname, :classname, :takenby)");
                 $query -> execute([
                     'attname' => $AttendName,
                     'takenby' => $RepName,
-                    'classname' => $_SESSION['class2show'],
+                    'classname' => $class2show
                 ]);
 
             } catch (Exception $e) {
@@ -458,6 +458,8 @@
                 
                 rename("../attends/$AttendanceName", "../cachedattends/$AttendanceName");
                 rename("../cachedattends/$AttendanceName", "../cachedattends/" . explode(".pdf", $AttendanceName, 2)[0] . " -- " . time() . ".pdf");
+
+                return true;
             } catch (Exception $e) {
                 die('Error: ' . $e -> getMessage());
             }

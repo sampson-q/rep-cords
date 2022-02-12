@@ -1,6 +1,5 @@
 <?php
     session_start();
-    error_reporting(E_ERROR | E_PARSE);
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +40,11 @@
                     <div>
                         <div style="box-shadow: 0px 0px 0px #ccc;">
                             <h5 style="color: white; height: 23px;">
-                                <?php echo $_SESSION['signup_issue']; ?>
+                                <?php
+                                    if (!empty($_SESSION['signup_issue'])) {
+                                        echo $_SESSION['signup_issue'];
+                                    }
+                                ?>
                             </h5>
                         </div>
                         
