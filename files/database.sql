@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS person(
     middlename VARCHAR(30),
     lastname VARCHAR(30) NOT NULL,
     class VARCHAR(6) NOT NULL,
-    program_type VARCHAR(20) NOT NULL,
+    program_type VARCHAR(70) NOT NULL,
     user_level INT(3) NOT NULL,
     student_email VARCHAR(100) NOT NULL UNIQUE
 );
@@ -39,7 +39,7 @@ CREATE TABLE `repnotes`.`shared_classes` (
 CREATE TABLE `repnotes`.`all_attendance` (
     `id` INT(20) NOT NULL AUTO_INCREMENT ,
     `attend_names` VARCHAR(50) NOT NULL ,
-    `class_names` VARCHAR(50) NOT NULL ,
+    `class_names` VARCHAR(200) NOT NULL ,
     `taken_by` VARCHAR(50) NOT NULL ,
     PRIMARY KEY  (`id`),
     UNIQUE  `attend_names` (`attend_names`(50))
