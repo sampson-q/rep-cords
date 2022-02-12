@@ -73,30 +73,44 @@
     if (AddClassButton) {
         AddClassButton.addEventListener('click', function () {
             var ClassName = document.getElementById('addclassname').value;
-            
-            if (ClassName != '') {
-                $.ajax({
-                    url: '../controllers/DashBoard.php',
-                    method: 'POST',
-                    data: {classname: ClassName},
-                    complete: function (feedback) {
-                        if (feedback.responseText === 'class_added') {
-                            alert('Class Added!');
-                        }
+            if (ClassName.indexOf('_') < 0) {
+                if (ClassName != '') {
+                    $.ajax({
+                        url: '../controllers/ClassTransactions.php',
+                        method: 'POST',
+                        data: {
+                            WhatToDo: 'add_class',
+                            classname: ClassName
+                        },
+                        complete: function (feedback) {
+                            if (feedback.responseText === 'class_halfname_empty') {
+                                alert('Provide Class Name!');
+                            }
 
-                        if (feedback.responseText === 'add_class_error') {
-                            alert('Class Error! Class may already exist.');
-                        }
+                            if (feedback.responseText === 'class_created') {
+                                alert('Class Created');
+                            }
 
-                        if (feedback.responseText === 'class_exists') {
-                            alert('Class Already Exist!');
-                        }
+                            if (feedback.responseText === 'class_details !added') {
+                                alert('Class Error!');
+                            }
 
-                        //alert(feedback.responseText);
-                    }
-                });
+                            if (feedback.responseText === 'class !created') {
+                                alert('Class Error!');
+                            }
+
+                            if (feedback.responseText === 'class_exist') {
+                                alert('Class Already Exist!');
+                            }
+
+                            //alert(feedback.responseText);
+                        }
+                    });
+                } else {
+                    alert('Provide Class Name!');
+                }
             } else {
-                alert('Provide Class Name!');
+                alert('Hyphens are not allowed');
             }
         });
     }
@@ -113,14 +127,13 @@
     var ConfirmDeleteClass = document.getElementById('proceedclassremov');
     if (ConfirmDeleteClass) {
         ConfirmDeleteClass.addEventListener('click', function () {
-            var classtoremove = document.getElementById('class2delete').value;
             var classname0 = document.getElementById('class2rem').value;
             $.ajax({
-                url: '../models/ClassTransactions.php',
+                url: '../controllers/ClassTransactions.php',
                 method: 'POST',
                 data: {
-                    ClasstoDelete: classtoremove,
-                    ClassName: classname0
+                    WhatToDo: 'remove_class',
+                    classname: classname0
                 },
                 complete: function (feed) {
                     if (feed.responseText === 'class_removed') {
@@ -141,7 +154,7 @@
             var AttendanceToRemove = document.getElementById('att2rem').value;
             var AttendanceToMove = document.getElementById('att2move').value;
             $.ajax({
-                url : '../models/ClassTransactions.php',
+                url : '../controllers/ClassTransactions.php',
                 method: 'POST',
                 data: {
                     att2rem: AttendanceToRemove,
@@ -152,6 +165,8 @@
                         alert("Attendance Removed!");
                     }
                     window.location.href = "../dashboard";
+
+                    //alert(feed.responseText);
                 }
             });
         });
@@ -166,14 +181,7 @@
     }
 
     // views add-member-to-class form
-    var AddClassMembers = document.getElementById('addmember');
-    if (AddClassMembers) {
-        AddClassMembers.addEventListener('click', function () {
-            swapView('ViewClassContents', 'AddClassMembers');
-            document.getElementById('ViewSharedClassContents').style = "display: none;";
-            //alert('Member added');
-        })
-    }
+
 
     // adds member to a class
     var AddMember = document.getElementById('addmemberbutton');
@@ -187,26 +195,24 @@
                 if (StudentId.length == 9) {
                     if (StudentName != '') {
                         $.ajax({
-                            url: '../models/ClassTransactions.php',
+                            url: '../controllers/ClassTransactions.php',
                             method: 'POST',
                             data: {
-                                classforadd: MemberAddClass,
-                                personforadd: StudentName,
-                                personidforadd: StudentId
+                                WhatToDo: 'add_member',
+                                classname: MemberAddClass,
+                                membername: StudentName,
+                                memberid: StudentId
                             },
                             complete: function (feed) {
                                 if (feed.responseText === 'member_added') {
                                     alert(StudentName + ' successfuly added');
                                 }
             
-                                if (feed.responseText === 'member_exists') {
-                                    alert('Member with ID ' + StudentId + ', is already a member');
+                                if (feed.responseText === 'member_exist') {
+                                    alert('Member with ID \"' + StudentId + '\", is already a member');
                                 }
-
-                                swapView('DashHome', 'AddClassMembers');
-                                document.getElementById('DashHome').style = 'display: none';
-                                document.getElementById('AddClassMembers').style = 'display: block';
-                                //alert(feed.responseText);
+                                //(feed.responseText);
+                                window.location.reload() = true;
                             }
                         });
                     } else { alert('Provide Student Name!'); }
@@ -233,17 +239,22 @@
                             alert('No Changes detected!');
                         } else {
                             $.ajax({
-                                url: '../models/ClassTransactions.php',
+                                url: '../controllers/ClassTransactions.php',
                                 method: 'POST',
                                 data: {
-                                    classforupdate: MemberUpdateClass,
-                                    personforupdate: UpdateName,
-                                    personidforupdate: UpdateID,
+                                    WhatToDo: 'update_member',
+                                    classname: MemberUpdateClass,
+                                    membername: UpdateName,
+                                    memberid: UpdateID,
                                     recordtoupdate: sn
                                 },
                                 complete: function (feed) {
                                     if (feed.responseText === 'member_updated') {
                                         alert('Member successfuly updated');
+                                    }
+
+                                    if (feed.responseText === 'member_exist') {
+                                        alert("\"" + UpdateID + "\"" + " is already belongs to another student");
                                     }
     
                                     //alert(feed.responseText);
@@ -290,18 +301,19 @@
             var RecordToRemove = document.getElementById('recordtoremove').value;
             var ClassForRecord = document.getElementById('class2delete').value;
             $.ajax({
-                url: '../models/ClassTransactions.php',
+                url: '../controllers/ClassTransactions.php',
                 method: 'POST',
                 data: {
-                    recordtoremove: RecordToRemove,
-                    class4remove: ClassForRecord,
+                    WhatToDo: 'remove_member',
+                    recordtoupdate: RecordToRemove,
+                    classname: ClassForRecord,
                 },
                 complete: function (feed) {
                     if (feed.responseText == 'member_removed') {
                         alert('Member Removed');
-                        window.location.href = '../dashboard';
                     }
 
+                    window.location.href = '../dashboard';
                     //alert(feed.responseText);
                 }
             });
@@ -329,15 +341,21 @@
     if (UnshareClass) {
         UnshareClass.addEventListener('click', function () {
             var Class2Unshare = document.getElementById('classtounshare').value;
+            //alert("This is the class id: " + Class2Unshare);
             $.ajax ({
-                url: '../models/ClassTransactions.php',
+                url: '../controllers/ClassTransactions.php',
                 method: 'POST',
-                data: {classunshare: Class2Unshare},
+                data: {
+                    WhatToDo: 'unshare_class',
+                    classid: Class2Unshare
+                },
                 complete: function (feed) {
                     if (feed.responseText == 'class_unshared') {
                         alert('Class Unsheared');
                         window.location.href = '../dashboard';
                     }
+
+                    //alert(feed.responseText);
                 }
             });
         });
@@ -376,11 +394,12 @@
                 alert('You can\'t share this class to yourself');
             } else {
                 $.ajax ({
-                    url: '../models/ClassTransactions.php',
+                    url: '../controllers/ClassTransactions.php',
                     method: 'POST',
                     data: {
-                        share2: ShareTo,
-                        share22: ToShare
+                        WhatToDo: 'share_class',
+                        repid: ShareTo,
+                        classname: ToShare
                     },
                     complete: function (feed) {
                         if (feed.responseText == 'class_already_shared') {
@@ -400,6 +419,7 @@
                         }
 
                         window.location.href = '../dashboard';
+                        alert(feed.responseText);
                     }
                 });
             }
@@ -418,7 +438,6 @@
     var TakeAttendance = document.getElementById('takeattendance');
     if (TakeAttendance) {
         TakeAttendance.addEventListener('click', function () {
-            class4view = document.getElementById('classtype').value;
             swapView('DashHome', 'TakeAttendance');
             swapView('ViewAttendance', 'TakeAttendance');
         });
