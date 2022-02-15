@@ -1,7 +1,6 @@
 body {
-    background-image: url('../imgs/alex-tXYg4Zx7kSU-unsplash.jpg');
-    background-size: 100%;
-    background-color: black;
+    background: url('../imgs/alex-tXYg4Zx7kSU-unsplash.jpg') no-repeat center fixed;
+    background-size: cover;
 }
 
 #idd {

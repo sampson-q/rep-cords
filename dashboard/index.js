@@ -7,6 +7,9 @@
         document.getElementById(container1).style = "display: block;";
     }
 
+    let NavMessage = (navMessage) => {
+        document.getElementById('navar').innerHTML = "<span class='h6'>" + navMessage + "</span>";
+    }
 
     // view home of dashboard
     var HomeButton = document.getElementById('home');
@@ -51,6 +54,7 @@
     if (AddClassPage) {
         AddClassPage.addEventListener('click', function () {
             swapView('DashHome', 'AddClassForm');
+            NavMessage('Add A Class');
         });
     }
 
@@ -60,11 +64,7 @@
     if (ViewClassPage) {
         ViewClassPage.addEventListener('click', function () {
             swapView('DashHome', 'ViewClassPage');
-            $.ajax({
-                url: 'index.php',
-                method: 'POST', 
-                data: {DisplayClasses: 'DisplayClass'}
-            });
+            NavMessage('My Classes');
         });
     }
 
@@ -119,7 +119,8 @@
     var ClassAdd = document.getElementById('classadd');
     if (ClassAdd) {
         ClassAdd.addEventListener('click', function () {
-            swapView('ViewClassPage', 'AddClassForm')
+            swapView('ViewClassPage', 'AddClassForm');
+            NavMessage('Add A Class');
         });
     }
 
@@ -327,6 +328,7 @@
     if (SharedClass) {
         SharedClass.addEventListener('click', function () {
             swapView('DashHome', 'SharedClasses');
+            NavMessage('My Shared Classes');
         });
     }
 
@@ -335,6 +337,7 @@
     if (ShareAClass) {
         ShareAClass.addEventListener('click', function () {
             swapView('SharedClasses', 'ShareAClass');
+            NavMessage('Share A Class');
         });
     }
 
@@ -353,7 +356,7 @@
                 },
                 complete: function (feed) {
                     if (feed.responseText == 'class_unshared') {
-                        alert('Class Unsheared');
+                        alert('Detach Successful');
                         window.location.href = '../dashboard';
                     }
 
@@ -436,6 +439,7 @@
     if (ImportedClass) {
         ImportedClass.addEventListener('click', function () {
             swapView('DashHome', 'import-classes');
+            NavMessage('My Received Classes');
         });
     }
 
@@ -454,6 +458,7 @@
     if (Courses) {
         Courses.addEventListener('click', function () {
             swapView('DashHome', 'Courses');
+            NavMessage('My Courses');
         });
     }
 
@@ -462,6 +467,7 @@
     if (ShowAttendance) {
         ShowAttendance.addEventListener('click', function () {
             swapView('DashHome', 'ShowAttendance');
+            NavMessage('View Attendances');
         });
     }
     
