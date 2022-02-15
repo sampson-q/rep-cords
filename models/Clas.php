@@ -6,7 +6,7 @@
     */
 
     /**
-     * Description of AddClass
+     * Description of Clas
      *
      * @author Hash 👽
      */

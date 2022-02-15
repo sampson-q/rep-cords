@@ -17,6 +17,7 @@
     require_once 'DatabaseConnection.php';
     require_once '../models/Person.php';
     require_once '../models/Clas.php';
+    require_once '../models/Course.php';
 
     class CrudOperation {
         private $hostname;
@@ -288,14 +289,14 @@
         }
 
         // update course details
-        public function UpdateCourseDetails($coursenameEdit, $coursecodeEdit, $lectnameEdit, $recforup) {
+        public function UpdateCourseDetails(Course $course) {
             try {
-                $query = $this -> connection -> prepare("UPDATE `registered_courses` SET `courses_code` = :coursecode, `courses_name` = :coursename, `lecturer_name` = :lectname WHERE `registered_courses`.`id` = :idchange;");
+                $query = $this -> connection -> prepare("UPDATE `registered_courses` SET `courses_code` = :coursecode, `courses_name` = :coursename, `lecturer_name` = :courselect WHERE `registered_courses`.`id` = :courseid;");
                 $query -> execute([
-                    'coursecode' => $coursecodeEdit,
-                    'coursename' => $coursenameEdit,
-                    'lectname' => $lectnameEdit,
-                    'idchange' => $recforup
+                    'courseid' => $course -> getCourseID(),
+                    'coursecode' => $course -> getCourseCode(),
+                    'coursename' => $course -> getCourseName(),
+                    'courselect' => $course -> getCourseLect()
                 ]);
 
                 return true;
@@ -332,11 +333,11 @@
         }
 
         // unregister a course
-        public function UnregisterCourse($recordid) {
+        public function UnregisterCourse(Course $course) {
             try {
-                $query = $this -> connection -> prepare('DELETE FROM registered_courses WHERE id= :recid');
+                $query = $this -> connection -> prepare('DELETE FROM registered_courses WHERE id= :courseid');
                 $query -> execute([
-                    'recid' => $recordid
+                    'courseid' => $course -> getCourseID()
                 ]);
 
                 return true;
@@ -417,15 +418,17 @@
         }
 
         // register courses
-        public function RegisterCourses($courseCode, $courseName, $lecName) {
+        public function RegisterCourse(Course $course) {
             try {
-                $query = $this -> connection -> prepare("INSERT INTO `registered_courses` (`id`, `courses_code`, `courses_name`, `lecturer_name`, `student_id`) VALUES (NULL, :coursecode, :coursename, :lecname, :studentid)");
+                $query = $this -> connection -> prepare("INSERT INTO `registered_courses` (`id`, `courses_code`, `courses_name`, `lecturer_name`, `student_id`) VALUES (NULL, :coursecode, :coursename, :courselect, :studentid)");
                 $query -> execute([
                     'studentid' => $_SESSION['student_id'],
-                    'coursecode' => $courseCode,
-                    'coursename' => $courseName,
-                    'lecname' => $lecName
+                    'coursecode' => $course -> getCourseCode(),
+                    'coursename' => $course -> getCourseName(),
+                    'courselect' => $course -> getCourseLect()
                 ]);
+
+                return true;
             } catch (Exception $e) {
                 die('Error: '. $e -> getMessage());
             }

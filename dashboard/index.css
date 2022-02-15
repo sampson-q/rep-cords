@@ -10,9 +10,23 @@ body {
     margin-top: 40px;
 }
 
-.fixTableHead {
-    overflow-y: auto;
-    height: 430px;
+.header {
+    position: sticky;
+    top: 0;
+}
+
+.cont {
+    height: 75vh;
+    overflow-x: hidden;
+}
+
+.btn-success, .btn-danger {
+    width: 10px;
+    height: 5px;
+}
+
+.fa-minus-circle {
+    color: #dc3545;
 }
 
 #Individuals {
@@ -22,3 +36,4 @@ body {
 #RegisterCourses {
     margin-top: 40px;
 }
+

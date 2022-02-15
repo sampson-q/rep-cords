@@ -7,6 +7,9 @@
         document.getElementById(container1).style = "display: block;";
     }
 
+    let NavMessage = (navMessage) => {
+        document.getElementById('navar').innerHTML = "<span class='h6'>" + navMessage + "</span>";
+    }
 
     // view home of dashboard
     var HomeButton = document.getElementById('home');
@@ -51,6 +54,7 @@
     if (AddClassPage) {
         AddClassPage.addEventListener('click', function () {
             swapView('DashHome', 'AddClassForm');
+            NavMessage('Add A Class');
         });
     }
 
@@ -60,11 +64,7 @@
     if (ViewClassPage) {
         ViewClassPage.addEventListener('click', function () {
             swapView('DashHome', 'ViewClassPage');
-            $.ajax({
-                url: 'index.php',
-                method: 'POST', 
-                data: {DisplayClasses: 'DisplayClass'}
-            });
+            NavMessage('My Classes');
         });
     }
 
@@ -119,7 +119,8 @@
     var ClassAdd = document.getElementById('classadd');
     if (ClassAdd) {
         ClassAdd.addEventListener('click', function () {
-            swapView('ViewClassPage', 'AddClassForm')
+            swapView('ViewClassPage', 'AddClassForm');
+            NavMessage('Add A Class');
         });
     }
 
@@ -276,18 +277,20 @@
             var UpdateLectName = document.getElementById('updatelectname').value;
             var RecordForUpdate = document.getElementById('recforup').value;
             $.ajax({
-                url: '../models/ClassTransactions.php',
+                url: '../controllers/CourseTransactions.php',
                 method: 'POST',
                 data: {
-                    coursecodeupdate: UpdateCourseCode,
-                    coursenameupdate: UpdateCourseName,
-                    lectnameupdate: UpdateLectName,
-                    recordforupdate: RecordForUpdate
+                    coursecode: UpdateCourseCode,
+                    coursename: UpdateCourseName,
+                    courselect: UpdateLectName,
+                    courseid: RecordForUpdate,
+                    WhatToDo: 'update_course'
                 },
                 complete: function (feed) {
-                    if (feed.responseText == 'class_update_success') {
+                    if (feed.responseText == 'course_updated') {
                         alert('Course Update Successfull!');
                     }
+                    
                     //alert(feed.responseText);
                 }
             });
@@ -325,6 +328,7 @@
     if (SharedClass) {
         SharedClass.addEventListener('click', function () {
             swapView('DashHome', 'SharedClasses');
+            NavMessage('My Shared Classes');
         });
     }
 
@@ -333,6 +337,7 @@
     if (ShareAClass) {
         ShareAClass.addEventListener('click', function () {
             swapView('SharedClasses', 'ShareAClass');
+            NavMessage('Share A Class');
         });
     }
 
@@ -351,7 +356,7 @@
                 },
                 complete: function (feed) {
                     if (feed.responseText == 'class_unshared') {
-                        alert('Class Unsheared');
+                        alert('Detach Successful');
                         window.location.href = '../dashboard';
                     }
 
@@ -367,15 +372,18 @@
         UnregisterCourse.addEventListener('click', function () {
             var CourseToRemove = document.getElementById('recordtoremove').value;
             $.ajax({
-                url: '../models/ClassTransactions.php',
+                url: '../controllers/CourseTransactions.php',
                 method: 'POST',
-                data: {coursetoremove: CourseToRemove},
+                data: {
+                    WhatToDo: 'unregister_course',
+                    courseid: CourseToRemove
+                },
                 complete: function (feed) {
                     if (feed.responseText == 'course_unregistered') {
                         alert('Course Unregistered!');
-                        window.location.href = '../dashboard';
                     }
-                    
+
+                    window.location.href = '../dashboard';
                     //alert(feed.responseText);
                 }
             });
@@ -431,6 +439,7 @@
     if (ImportedClass) {
         ImportedClass.addEventListener('click', function () {
             swapView('DashHome', 'import-classes');
+            NavMessage('My Received Classes');
         });
     }
 
@@ -449,6 +458,7 @@
     if (Courses) {
         Courses.addEventListener('click', function () {
             swapView('DashHome', 'Courses');
+            NavMessage('My Courses');
         });
     }
 
@@ -457,14 +467,7 @@
     if (ShowAttendance) {
         ShowAttendance.addEventListener('click', function () {
             swapView('DashHome', 'ShowAttendance');
-        });
-    }
-
-    // view courses
-    var RegisterCourses = document.getElementById('registercourses');
-    if (RegisterCourses) {
-        RegisterCourses.addEventListener('click', function () {
-            swapView('Courses', 'RegisterCourses');
+            NavMessage('View Attendances');
         });
     }
     
@@ -473,23 +476,26 @@
     if (RRegisterCourses) {
         RRegisterCourses.addEventListener('click', function () {
             var CourseName = document.getElementById('coursename').value;
-            var CourseCode = document.getElementById('coursecode').value;
-            var LecturerNa = document.getElementById('lectname').value;
+            var CourseCode = document.getElementById('courseCode').value;
+            var LecturerNa = document.getElementById('lEctName').value;
 
             if (CourseCode != '' && CourseName != '' && LecturerNa != '') {
                 $.ajax({
-                    url: '../models/ClassTransactions.php',
+                    url: '../controllers/CourseTransactions.php',
                     method: 'POST',
                     data: {
-                        cname: CourseName,
-                        ccode: CourseCode,
-                        lname: LecturerNa
+                        WhatToDo: 'register_course',
+                        coursename: CourseName,
+                        coursecode: CourseCode,
+                        courselect: LecturerNa
                     },
                     complete: function (feed) {
-                        if (feed.responseText == 'courses_registered') {
+                        if (feed.responseText == 'course_registered') {
                             alert('Course Registered');
-                            window.location.href = '../dashboard';
                         }
+                        
+                        window.location.href = '../dashboard';
+                        //alert(feed.responseText);
                     }
                 });
             } else {
