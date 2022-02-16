@@ -22,16 +22,16 @@ body {
     text-shadow: 1px 1px 1px black;
 }
 
-.fa-minus-circle {
+.fa-minus-circle, .fa-trash-alt {
     color: #dc3545;
     
 }
 
-.fa-eye {
+.fa-eye, .fa-pen, .fa-sync, .fa-share-square {
     color: #198754;
 }
 
-.fa-eye:hover, .fa-minus-circle:hover {
+.fa-eye:hover, .fa-minus-circle:hover, .fa-pen:hover, .fa-sync:hover, .fa-trash-alt:hover, .fa-share-square:hover {
     color: #000;
 }
 

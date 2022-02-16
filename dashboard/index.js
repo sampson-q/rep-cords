@@ -427,7 +427,7 @@
                         }
 
                         window.location.href = '../dashboard';
-                        alert(feed.responseText);
+                        //alert(feed.responseText);
                     }
                 });
             }

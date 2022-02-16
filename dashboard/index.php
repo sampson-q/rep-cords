@@ -129,7 +129,7 @@
                 </form>
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="ViewClassPage">
+            <div style="display: none;" class="" id="ViewClassPage">
                 <?php
                     $query = $connection -> prepare("SELECT * FROM `all_class` WHERE student_id = :userId");
                     $query -> execute([
@@ -143,20 +143,27 @@
                                     <tr align="">
                                         <th class="header" scope="col">S/N</th>
                                         <th class="header" scope="col">CLASS</th>
-                                        <th class="header" scope="col">OPTION</th>
+                                        <th class="header" scope="col" colspan="2">OPTIONS</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                        <tr>
+                                        <tr class="ttrr">
                                             <form action="" method="POST" role="form">
                                                 <input type="hidden" value="<?php echo $result['class_names'] ?>" name="classname" id="classname" />
                                                 <td><?php echo $counter; ?></td>
-                                                <td width=""><?php echo $result['class_names']; ?></td>
+                                                <td width="500"><?php echo $result['class_names']; ?></td>
                                                 <td>
-                                                    <button id="viewclassmembers" name="viewclassmembers" class="btn btn-success"><span class="far fa-eye"></span></button>
-                                                    <button id="deleteclass" name="deleteclass" class="btn btn-danger"><span class="fas fa-minus-circle"></span></button>
+                                                    <button id="viewclassmembers" name="viewclassmembers" title="View <?php echo $result['class_names']; ?>" class="btt">
+                                                        <span class="far fa-eye"></span>
+                                                    </button>
                                                 </td>
+                                                <td>
+                                                    <button id="deleteclass" name="deleteclass" title="Delete <?php echo $result['class_names']; ?>" class="btt">
+                                                        <span class="fas btn fa-trash-alt"></span>
+                                                    </button>
+                                                </td>
+                                                
                                                 
                                             </form>
                                         </tr>
@@ -164,6 +171,7 @@
                                 <tbody>
                             </table>
                         </div>
+                        <div align="right" id="classadd" class="btn btn-primary">Add Class</div>
                         
                     <?php } else { echo '<h2 style="color: white;">Your classes will show here if you have any!<h2>
                                         <tr align="right">
@@ -173,7 +181,9 @@
                 ?>
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="ViewClassContents">
+            <div style="display: none;" class="" id="ViewClassContents">
+                <input id="filter" placeholder="Search..." style="height: 30px; margin-top: -15px;" class="form-control mb-2" type="text">
+                
                 <?php
                     if (isset($_POST['viewclassmembers'])){
                         echo '<script>document.getElementById("ViewClassContents").style = "display: block;";</script>';
@@ -193,66 +203,52 @@
                         ]);
 
                         if ($query -> rowCount() > 0) { ?>
-                        <div style="color: white;">
-                            <div id="table-header-div" class="">
-                                <form action="" method="POST">
-                                    
-                                    <script>document.getElementById('navar').innerHTML = "<span class='h6'><?php echo $classname ?></span>";</script>
-                                    <input type="hidden" value="<?php echo $_SESSION['student_id'] . '_' . $_SESSION['class2show'] ?>" id="attendance-class" name="attendance-class" />
-                                    
-                                    
-                                        <input class="form-control me-2" type="text" placeholder="Search">
-                                        <button class="btn btn-primary" type="button">Search</button>
-                                    
-                                   
-                                        <button class="btn btn-secondary" id="vattendance" name="vattendance"><span class="fas fa-book-reader"></span></button>
-                                            
-                                        
-                                    </div>
-                                </form>
-                                
-                                <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
-                                    <table class="table">
+                            <div class="cont">
+                                <script>document.getElementById('navar').innerHTML = "<span class='h6'><?php echo $classname ?></span>";</script>
+                                <table class="table table-responsive-sm" style="color: white;">
+                                    <thead class="table-dark">
                                         <tr>
-                                            <td>S/N</td>
-                                            <td align="center">Student Name</td>
-                                            <td align="center">Student ID</td>
-                                            <td>Options</td>
-                                            <td></td>
+                                            <th class="header" scope="col">S/N</th>
+                                            <th class="header" scope="col">NAME</th>
+                                            <th class="header" scope="col">ID</th>
+                                            <th class="header" scope="col" colspan="2">OPTIONS</th>
                                         </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
-                                    <table class="table table-responsive" style="color: white;">
-                                        <tr id="table-body-div">
+                                    </thead>
+                                    <tbody id="classtable">
                                         <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                            <tr align="center">
-                                                <td><?php echo $counter; ?></td>
-                                                <td width="500"><?php echo $result['studentname']; ?></td>
-                                                <td><?php echo $result['studentid']; ?></td>
-                                                <form action="" method="POST">
+                                            <tr class="ttrr">
+                                                <form action="" method="POST" role="form">
                                                     <input type="hidden" name="sn" id="sn" value="<?php echo $result['sn']; ?>" />
                                                     <input type="hidden" name="id2operate" id="id2operate" value="<?php echo $result['studentid']; ?>" />
                                                     <input type="hidden" name="name2operate" id="name2operate" value="<?php echo $result['studentname']; ?>" />
-                                                    <td><input id="updatemember" name="updatemember" type="submit" id="tableButton" class="btn btn-success" value="Update" /></td>
-                                                    <td><input id="removemember" name="removemember" type="submit" id="tableButton"class="btn btn-danger" value="Remove" /></td>
+                                                    
+                                                    <td align="center"><?php echo $counter; ?></td>
+                                                    <td width="500"><?php echo $result['studentname']; ?></td>
+                                                    <td><?php echo $result['studentid']; ?></td>
+                                                    <td>
+                                                        <button class="btt" title="Modify <?php echo $result['studentname']; ?>'s details" id="updatemember" name="updatemember">
+                                                            <span class="fa fa-sync"></span>
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btt" title="Remove <?php echo $result['studentname'] . ' from ' . $classname ?>" id="removemember" name="removemember">
+                                                            <span class="fas fa-minus-circle"></span>
+                                                        </button>
+                                                    </td>
                                                 </form>
                                             </tr>
                                         <?php $counter += 1; } ?>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-xs-12" style="height: 15px;"></div>
-                                <div class="col-xs-12" align="right">
-                                    <!--<div id="addmember" class="btn btn-primary">Add Member</div>-->
-                                    <form method="POST">
-                                        <input type="submit" name="addmember" id="addmember" class="btn btn-primary" value="Add Member" />
-                                    </form>
-                                </div>
+                                    <tbody>
+                                </table>
                             </div>
-                        </div>
+                            <div class="col-xs-12" style="height: 15px;"></div>
+                            <div class="col-xs-12" align="right">
+                                <form method="POST">
+                                    <input type="hidden" value="<?php echo $_SESSION['student_id'] . '_' . $_SESSION['class2show'] ?>" id="attendance-class" name="attendance-class" />
+                                    <button class="btn btn-secondary" title="View <?php echo $classname; ?> Attendances" id="vattendance" name="vattendance"><span class="fas fa-book-reader"></span></button>
+                                    <input type="submit" name="addmember" id="addmember" class="btn btn-primary" value="Add Member" />
+                                </form>
+                            </div>
                         <?php } else { echo '<h2 style="color: white;">Class members will show here if any!<h2>
                                             <tr align="right">
                                                 <td><div class="col-xs-8"></div></td>
@@ -279,7 +275,7 @@
                     <?php } ?>
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="AddClassMembers">
+            <div style="display: none;" class="" id="AddClassMembers">
                 <?php if (isset($_POST['addmember'])) {
                     echo '<script>document.getElementById("AddClassMembers").style = "display: block;";</script>';
                     echo '<script>document.getElementById("DashHome").style = "display: none;";</script>';
@@ -301,7 +297,7 @@
                 <?php } ?>
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="ViewAttendance">
+            <div style="display: none;" class="" id="ViewAttendance">
                 <?php
                     if (isset($_POST['vattendance'])) {
                         $ClassType = filter_input(INPUT_POST, 'attendance-class');
@@ -315,51 +311,51 @@
                         ]);
                         
                         if ($query -> rowCount() > 0) { ?>
-                            <div style="color: white;">
-                                <div id="table-header-div" class="">
-                                    <h3 align="center" style="color: white;">Attendances for <?php echo $_SESSION['class2show']; ?></h3>
-                                    <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
-                                        <table class="table">
-                                            <tr>
-                                                <td>S/N</td>
-                                                <td align="center">Attend. Name</td>
-                                                <td align="center">Taken By</td>
-                                                <td>Options</td>
-                                                <td></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div>
-                                <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
-                                    <table class="table table-responsive" style="color: white;">
-                                        <tr id="table-body-div">
-                                        <?php
-                                            $counter = 1; while ($result = $query -> fetch()) {
-                                            $firstcut = explode("-", $result['attend_names'], 3)[1];
-                                            $seconcut = explode("-", $result['attend_names'], 3)[2];
-                                            $thirdcut = explode(".", $seconcut, 2)[0];
+                            <div style="cont">
+                                <script>document.getElementById('navar').innerHTML = "<h6>Attendance for <?php echo $_SESSION['class2show']; ?></h6>";</script>
+                                <table class="table table-responsive-sm" style="color: white;">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="header" scope="col">S/N</th>
+                                            <th class="header" scope="col">Attendance</th>
+                                            <th class="header" scope="col">Taken By</th>
+                                            <th class="header" scope="col" colspan="2">Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: 15px;">
+                                        <?php $counter = 1; while ($result = $query -> fetch()) {
+                                                $firstcut = explode("-", $result['attend_names'], 3)[1];
+                                                $seconcut = explode("-", $result['attend_names'], 3)[2];
+                                                $thirdcut = explode(".", $seconcut, 2)[0];
                                             ?>
-                                            <tr align="center">
-                                                <td><?php echo $counter; ?></td>
-                                                <td width="300"><?php echo "[$firstcut] ---> [$thirdcut ]"; ?></td>
-                                                <td><?php echo $result['taken_by']; ?></td>
-                                                <form action="" method="POST">
+                                            <tr class="ttrr">
+                                                <form action="" method="POST" role="form">
                                                     <input type="hidden" name="snatt" id="snatt" value="<?php echo $result['id']; ?>" />
                                                     <input type="hidden" name="attn" id="attn" value="<?php echo $result['attend_names']; ?>" />
                                                     <input type="hidden" name="attname" id="attname" value="<?php echo $firstcut . " @ " . $thirdcut ?>" />
-                                                    <td><a href="../attends/<?php echo $result['attend_names'];?>" target="_blank" class="btn btn-success">View</a></td>
-                                                    <td><input id="deleatt" name="deleatt" type="submit" id="tableButton"class="btn btn-danger" value="Delete" /></td>
+                                                    
+                                                    <td><?php echo $counter; ?></td>
+                                                    <td width="300"><?php echo "[$firstcut] ---> [$thirdcut ]"; ?></td>
+                                                    <td><?php echo $result['taken_by']; ?></td>
+
+                                                    <td>
+                                                        <a title="Open<?php echo "$thirdcut Attendance for $firstcut"; ?>" href="../attends/<?php echo $result['attend_names'];?>" target="_blank" class="btt">
+                                                            <span class="fa fa-eye"></span>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btt" title="Delete<?php echo "$thirdcut Attendance for $firstcut"; ?>" id="deleatt" name="deleatt">
+                                                            <span class="far fa-trash-alt"></span>
+                                                        </button>
+                                                    </td>
                                                 </form>
                                             </tr>
                                         <?php $counter += 1; } ?>
-                                        </tr>
-                                    </table>
-                                </div>
+                                    <tbody>
+                                </table>
                                 <div class="col-xs-12" style="height: 15px;"></div>
                                 <div class="col-xs-12" align="right">
                                     <div id="takeattendance" class="btn btn-primary">Take Attendance</div>
-                                </div>
                                 </div>
                             </div>
                             <?php } else { echo '<h2 style="color: white;">Attendances will show here if any<h2>
@@ -372,6 +368,7 @@
             </div>
 
             <div style="display: none;" class="" id="TakeAttendance">
+                <input id="filtter" placeholder="Search..." style="height: 30px; margin-top: -15px;" class="form-control mb-2" type="text">
                 <?php
                     $qr = $connection -> prepare('SELECT * FROM registered_courses WHERE student_id = :userid');
                     
@@ -394,47 +391,52 @@
 
                     if ($query -> rowCount() > 0 ) {
                         if ($qr -> rowCount() > 0) { ?>
-                            <div class="container-fluid col-xs-6">
-                                <form method="POST">
-                                    <select style="margin-top: 12px;" class="" id="coursecode" name="coursecode" required>
-                                        <option value="" selected disabled>Select Course</option>
-                                        <?php while ($res = $qr -> fetch()) { ?>
-                                            <option value="<?php echo $res['courses_name'] . '=' . $res['courses_code'] . '=' . $res['lecturer_name']; ?>"><?php echo $res['courses_name'] . ' (' . $res['courses_code'] . ')'; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <input type="date" name="coursedate" id="coursedate" required />
-                                                                
-                                    <div class="container text-center table-responsive">
-                                        <table class="table text-center" style="color: white; margin-top: 15px;">
-                                            <thead>
-                                                <tr style="font-weight: bold;">
-                                                    <td>S/N</td>
-                                                    <td>STUDENT NAME</td>
-                                                    <td>STUDENT ID</td>
-                                                    <td>ATTENDANCE</td>
+                            <div>
+                                <form action="" role="form" method="POST">
+                                    <div class="cont">
+                                        <table class="table table-responsive-sm" style="color: white; font-size: 15px;">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th class="header" scope="col">S/N</th>
+                                                    <th class="header" scope="col">NAME</th>
+                                                    <th class="header" scope="col">ID</th>
+                                                    <th class="header" scope="col">STATUS</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="classtable">
-                                            <?php
-                                                $counter = 1; while($result = $query -> fetch()) {
-                                            ?>
-                                            <tr>
-                                                <td><?php echo $counter ?></td>
-                                                <td><?php echo $result['studentname'] ?></td>
-                                                <td><?php echo $result['studentid'] ?></td>
-                                                <td><input type="checkbox" name="attStatus[]" value="<?php echo $result['studentid']; ?>" /></td>
-                                            </tr>
-                                            <?php
-                                                $counter += 1; }
-                                            ?>
-                                            </tbody>
+                                                <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                                    <tr class="ttrr">
+
+                                                        <input type="hidden" name="sn" id="sn" value="<?php echo $result['sn']; ?>" />
+                                                        <input type="hidden" name="id2operate" id="id2operate" value="<?php echo $result['studentid']; ?>" />
+                                                        <input type="hidden" name="name2operate" id="name2operate" value="<?php echo $result['studentname']; ?>" />
+                                                        
+                                                        <td align="center"><?php echo $counter; ?></td>
+                                                        <td width="500"><?php echo $result['studentname']; ?></td>
+                                                        <td><?php echo $result['studentid']; ?></td>
+                                                        <td align="center">
+                                                            <input type="checkbox" name="attStatus[]" value="<?php echo $result['studentid']; ?>" />
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                <?php $counter += 1; } ?>
+                                            <tbody>
                                         </table>
                                     </div>
-
                                     <div class="col-xs-12" style="height: 15px;"></div>
-                                    <div class="col-xs-12" align="right">
-                                        <!--<input type="submit" value="Submit Attendance" name="submitattendance" id="submitattendance" class="btn btn-primary" /> -->
-                                        <button id="submitattendance" name="submitattendance" class="btn btn-primary">Submit Attendance</button>
+
+                                    <div class="input-group" style="height: 1px;">
+                                    
+                                        <input class="form-control"  style="font-size: 14px;" type="date" name="coursedate" id="coursedate" required />
+
+                                        <select style="font-size: 14px;" class="form-control col-sm-4" id="coursecode" name="coursecode" required>
+                                            <option value="" selected disabled>Select Course</option>
+                                            <?php while ($res = $qr -> fetch()) { ?>
+                                                <option value="<?php echo $res['courses_name'] . '=' . $res['courses_code'] . '=' . $res['lecturer_name']; ?>"><?php echo $res['courses_name'] . ' (' . $res['courses_code'] . ')'; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        
+                                        <button id="submitattendance" title="Submit Attendance" name="submitattendance" class="btn far fa-edit btn-primary"></button>
                                     </div>
                                 </form>
                             </div>
@@ -471,7 +473,7 @@
                                 </thead>
                                 <tbody>
                                     <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                        <tr>
+                                        <tr class="ttrr">
                                             <form action="" method="POST" role="form">
                                                 <input type="hidden" value="<?php echo $result['id'] ?>" name="class2unshare" id="class2unshare"/>
                                                 <input type="hidden" value="<?php echo $result['shared_to'] ?>" name="person2unshare" id="person2unshare" />
@@ -479,7 +481,11 @@
                                                 <td align="center"><?php echo $counter; ?></td>
                                                 <td width="500"><?php echo $result['class_names']; ?></td>
                                                 <td><?php echo $result['shared_to']; ?></td>
-                                                <td align="center"><span id="unshareclass" name="unshareclass" class="fas btn fa-minus-circle"></span></td>
+                                                <td align="center">
+                                                    <button class="btt" title="Detach <?php echo $result['shared_to'] . ' from ' . $result['class_names']; ?>" id="unshareclass" name="unshareclass">
+                                                        <span class="fas btn fa-minus-circle"></span>
+                                                    </button>
+                                                </td>
                                             </form>
                                         </tr>
                                     <?php $counter += 1; } ?>
@@ -499,7 +505,7 @@
                 
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="ShareAClass">
+            <div style="display: none;" class="" id="ShareAClass">
                 <?php
                     $query = $connection -> prepare("SELECT * FROM `all_class` WHERE student_id = :userId");
                     $query -> execute([
@@ -522,9 +528,13 @@
                                             <form action="" method="POST" role="form">    
                                                 <input type="hidden" value="<?php echo $result['class_names']; ?>" id="sharethisclass" name="sharethisclass" />
                                                 <td><?php echo $counter; ?></td>
-                                                <td><?php echo $result['class_names']; ?></td>
+                                                <td width="500"><?php echo $result['class_names']; ?></td>
                                                 
-                                                <td><input id="shareclass" name="shareclass" type="submit" class="btn btn-success" value="Share" /></td>
+                                                <td>
+                                                    <button class="btt" title="Share <?php echo $result['class_names']; ?> with other users" id="shareclass" name="shareclass">
+                                                        <span class="far btn fa-share-square"></span>
+                                                    </button>    
+                                                
                                             </form>
                                         </tr>
                                     <?php $counter += 1; } ?>
@@ -568,12 +578,12 @@
                                                 <input type="hidden" id="classname" name="classname" value="<?php echo $result['shared_by'] . '_' . $result['class_names'];?>" />
                                                 <input type="hidden" id="class_shared0" name="class_shared0" value="<?php echo $result['class_names'];?>" />
                                                 <td>
-                                                    <button class="btt" id="viewclassmember" name="viewclassmembers">
+                                                    <button class="btt" title="View <?php echo $result['class_names']; ?>" id="viewclassmember" name="viewclassmembers">
                                                         <span class="fa fa-eye"></span>
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button class="btt" id="undoshare" name="undoshare">
+                                                    <button class="btt" title="Detach from <?php echo $result['class_names']; ?>" id="undoshare" name="undoshare">
                                                         <span class="fas fa-minus-circle"></span>
                                                     </button>
                                                 </td>
@@ -587,7 +597,7 @@
                 ?>
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="ShowAttendance">
+            <div style="display: none;" class="" id="ShowAttendance">
                 <?php
                     $query = $connection -> prepare("SELECT * FROM `all_class` WHERE student_id = :userId");
                     $query -> execute([
@@ -595,32 +605,33 @@
                     ]);
 
                     if ($query -> rowCount() > 0) { ?>
-                        <div style="color: white;">
-                            <div id="table-header-div" class="col-xs-12">
-                                <div id="table-heads" style="font-weight: bold; margin-top: -12px;">
-                                    <div class="col-xs-2">S/N</div>
-                                    <div align="" class="col-xs-4">Class Name</div>
-                                    <div class="col-xs-1"></div>
-                                    <div align="center" class="col-xs-3">Option</div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 fixTableHead" style="margin-top: 10px;">
-                                <table class="table table-responsive" style="color: white;">
-                                    <tr id="table-body-div">
-                                        <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                            <tr align="center" id="table-bodys">
-                                                <form action="" method="POST" role="form">    
-                                                    <input type="hidden" value="<?php echo $_SESSION['student_id'] . '_' . $result['class_names'] ?>" name="attendance-class" id="attendance-class">
-                                                    <td><?php echo $counter; ?></td>
-                                                    <td width=""><?php echo $result['class_names']; ?></td>
-                                                    <td><input id="vattendance" name="vattendance" type="submit" class="btn btn-success" value="View Attendance" /></td>
-                                                </form>
-                                            </tr>
-                                        <?php $counter += 1; } ?>
+                        <div class="cont">
+                            <table class="table table-responsive-sm" style="color: white;">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="header" scope="col">S/N</th>
+                                        <th class="header" scope="col">CLASS</th>
+                                        <th class="header" scope="col">OPTION</th>
                                     </tr>
-                                </table>
-                            </div>
-                            <div class="col-xs-12" style="height: 15px;"></div>
+                                </thead>
+                                <tbody>
+                                    <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                        <tr class="ttrr">
+                                            <form action="" method="POST" role="form">    
+                                                <input type="hidden" value="<?php echo $_SESSION['student_id'] . '_' . $result['class_names'] ?>" name="attendance-class" id="attendance-class">
+                                                <td><?php echo $counter; ?></td>
+                                                <td width="500"><?php echo $result['class_names']; ?></td>
+                                                <td>
+                                                    <button title="View Attendance for <?php echo $result['class_names']; ?>" id="vattendance" name="vattendance" class="btt">
+                                                        <span class="fa fa-eye btn" style="font-size: 20px;"></span>
+                                                    </button>
+                                                    
+                                                </td>
+                                            </form>
+                                        </tr>
+                                    <?php $counter += 1; } ?>
+                                <tbody>
+                            </table>
                         </div>
                         
                     <?php } else { echo '<h2 style="color: white;">Your classes will show here if you have any!<h2>
@@ -631,7 +642,7 @@
                 ?>
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="Courses">
+            <div style="display: none;" class="" id="Courses">
                 <?php
                     $query = $connection -> prepare('SELECT * FROM registered_courses WHERE student_id = :userid');
                     $query -> execute([
@@ -639,55 +650,49 @@
                     ]);
 
                     if ($query -> rowCount() > 0) { ?>
-                        <div style="color: white;">
-                            <div id="table-header-div" class="">
-                                
-                                <div class="col-xs-6">
-                                        <h2 align="right">My Courses</h2>
-                                </div>
-                                
-                                <div id="table-heads" class="col-xs-12" style="font-weight: bold;">
-                                <table class="table">
+                        <div class="cont">
+                            <table class="table table-responsive-sm" style="color: white;">
+                                <thead class="table-dark">
                                     <tr>
-                                        <td>S/N</td>
-                                        <td align="center">Course Name</td>
-                                        <td align="center">Course Code</td>
-                                        <td>Lecturer</td>
-                                        <td>Options</td>
-                                        <td></td>
+                                        <td class="header">S/N</td>
+                                        <td class="header">Name</td>
+                                        <td class="header">Code</td>
+                                        <td class="header">Lecturer</td>
+                                        <td class="header" colspan="2">Options</td>
                                     </tr>
-                                </table>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="col-xs-12 fixTableHead" style="margin-top: -18px;">
-                                    <table class="table table-responsive" style="color: white;">
-                                        <tr id="table-body-div">
-                                        <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                            <tr align="">
-                                                <td><?php echo $counter; ?></td>
-                                                <td width="250"><?php echo $result['courses_name']; ?></td>
-                                                <td><?php echo $result['courses_code']; ?></td>
-                                                <td><?php echo $result['lecturer_name']; ?></td>
-                                                <form action="" method="POST">
-                                                    <input type="hidden" name="snid" id="snid" value="<?php echo $result['id']; ?>" />
-                                                    <input type="hidden" name="coursenameEdit" id="coursenameEdit" value="<?php echo $result['courses_name']; ?>" />
-                                                    <input type="hidden" name="coursecodeEdit" id="coursecodeEdit" value="<?php echo $result['courses_code']; ?>" />
-                                                    <input type="hidden" name="lecturnameEdit" id="lecturnameEdit" value="<?php echo $result['lecturer_name']; ?>" />
-                                                    <td><input id="updatecourses" name="updatecourses" type="submit" id="tableButton" class="btn btn-success" value="Update" /></td>
-                                                    <td><input id="removecourses" name="removecourses" type="submit" id="tableButton"class="btn btn-danger" value="Remove" /></td>
-                                                </form>
-                                            </tr>
-                                        <?php $counter += 1; } ?>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-xs-12" style="height: 15px;"></div>
-                                <div class="col-xs-12" align="right">
-                                <form method="POST"><input type="submit" id="registercourses" name="registercourses" value="Register Courses" class="btn btn-primary"></form>
-                                </div>
-                            </div>
+                                </thead>
+                                <tbody id="classtable">
+                                <?php $counter = 1; while ($result = $query -> fetch()) { ?>
+                                    <tr class="ttrr">
+                                        <td><?php echo $counter; ?></td>
+                                        <td><?php echo $result['courses_name']; ?></td>
+                                        <td><?php echo $result['courses_code']; ?></td>
+                                        <td><?php echo $result['lecturer_name']; ?></td>
+                                        <form action="" method="POST">
+                                            <input type="hidden" name="snid" id="snid" value="<?php echo $result['id']; ?>" />
+                                            <input type="hidden" name="coursenameEdit" id="coursenameEdit" value="<?php echo $result['courses_name']; ?>" />
+                                            <input type="hidden" name="coursecodeEdit" id="coursecodeEdit" value="<?php echo $result['courses_code']; ?>" />
+                                            <input type="hidden" name="lecturnameEdit" id="lecturnameEdit" value="<?php echo $result['lecturer_name']; ?>" />
+                                            <td>
+                                                <button class="btt" title="Update Details for <?php echo $result['courses_name']; ?>" id="updatecourses" name="updatecourses">
+                                                    <span class="fa btn fa-sync"></span>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="btt" title="Remove <?php echo $result['courses_name']; ?> from Courses" id="removecourses" name="removecourses">
+                                                    <span class="fa btn fa-minus-circle"></span>
+                                                </button>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                <?php $counter += 1; } ?>
+                                <tbody>
+                            </table>
                         </div>
+                            <div class="col-xs-12" style="height: 15px;"></div>
+                            <div class="col-xs-12" align="right">
+                                <form method="POST"><input type="submit" id="registercourses" name="registercourses" value="Register Courses" class="btn btn-primary"></form>
+                            </div>
                     <?php } else { echo '<h2 style="color: white;">You have not registered any courses yet<h2>
                                             <tr align="right">
                                                 <td><div class="col-xs-8"></div></td>
@@ -695,19 +700,19 @@
                                             </tr>';}?>
             </div>
 
-            <div style="display: none;" class="container-fluid col-xs-6" id="RegisterCourses">
+            <div style="display: none;" class="" id="RegisterCourses">
                 <fom role="">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="courseCode">Course Code:</label>
                         <input type="text" class="form-control" id="courseCode" placeholder="Course Code" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="coursename">Course Name:</label>
                         <input type="text" class="form-control" id="coursename" placeholder="Course Name" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="lEctName">Lecturer Name:</label>
                         <input type="text" class="form-control" id="lEctName" placeholder="Lecturer Name" required>
                     </div>
@@ -1015,12 +1020,12 @@
                 ?>
 
                 <div style="color: white; text-align: center; display: block;" id="alert-box" class="">
-                <script>document.getElementById('navar').innerHTML = "<span class='h6'>Share Class</span>";</script>
+                    <script>document.getElementById('navar').innerHTML = "<span class='h6'>Share Class</span>";</script>
                     <div id="sharetowho" class="container-fluid col-xs-6">
                         <form role="form" method="POST" action="">
                             <div class="form-group mb-3">
                                 <label for="shareclassto">Share Class To:</label>
-                                <input type="text" class="form-control" id="shareclassto" placeholder="User ID" name="shareclassto" required>
+                                <input type="text" class="form-control mt-3" id="shareclassto" placeholder="User ID" name="shareclassto" required>
                                 <input type="hidden" value="<?php echo $sharethisclass ?>" name="class4share" id="class4share">
                             </div>
                         
@@ -1081,17 +1086,17 @@
                         <form role="form">
                             <input type="hidden" name="recforup" id="recforup" value="<?php echo $sn; ?>" />
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="coursecode">Course Code:</label>
                                 <input type="text" class="form-control" id="updatecoursecode" name="updatecoursecode" value="<?php echo $updateCourseCode; ?>" />
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="coursename">Course Name:</label>
                                 <input type="text" class="form-control" id="updatecoursename" name="updatecoursename" value="<?php echo $updateCourseName; ?>" />
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="lectname">Lecturer Name:</label>
                                 <input type="text" class="form-control" id="updatelectname" name="updatelectname" value="<?php echo $updateLectName; ?>" />
                             </div>
@@ -1126,5 +1131,25 @@
         <script src="index.js"></script>
         <script src="../js/jquery.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
+        
+        <script>
+            $(document).ready(function(){
+                $("#filter").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#classtable tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+
+            $(document).ready(function(){
+                $("#filtter").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#classtable tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
