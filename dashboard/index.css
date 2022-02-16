@@ -18,15 +18,30 @@ body {
 .cont {
     height: 75vh;
     overflow-x: hidden;
-}
-
-.btn-success, .btn-danger {
-    width: 10px;
-    height: 5px;
+    font-size: 15px;
+    text-shadow: 1px 1px 1px black;
 }
 
 .fa-minus-circle {
     color: #dc3545;
+    
+}
+
+.fa-eye {
+    color: #198754;
+}
+
+.fa-eye:hover, .fa-minus-circle:hover {
+    color: #000;
+}
+
+.btt {
+    background-color: transparent; border: 0px;
+}
+
+.ttrr:hover {
+    font-size: 1em;
+    font-weight: bolder;
 }
 
 #Individuals {
