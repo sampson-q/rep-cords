@@ -11,6 +11,7 @@
     $course = new Course();
     $crud = new CrudOperation();
 
+    // getting the values from the input post
     $courseid = filter_input(INPUT_POST, 'courseid');
     $whattodo = filter_input(INPUT_POST, 'WhatToDo');
     $coursename = filter_input(INPUT_POST, 'coursename');
