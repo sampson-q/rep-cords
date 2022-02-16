@@ -547,19 +547,19 @@
                     ]);
 
                     if ($query -> rowCount() > 0) { ?>
-                        <div class="container">
+                        <div class="cont">
                             <table class="table table-responsive-sm" style="color: white;">
                                 <thead class="table-dark">
                                     <tr>
                                         <th class="header" scope="col">S/N</th>
                                         <th class="header" scope="col">CLASS</th>
                                         <th class="header" scope="col">OWNER</th>
-                                        <th class="header" scope="col">OPTIONS</th>
+                                        <th class="header" scope="col" colspan="2">OPTIONS</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $counter = 1; while ($result = $query -> fetch()) { ?>
-                                        <tr>
+                                        <tr class="ttrr">
                                             <form action="" method="POST" role="form">
                                                 <td align="center"><?php echo $counter; ?></td>
                                                 <td width="500"><?php echo $result['class_names']; ?></td>
@@ -567,9 +567,15 @@
                                                 <input type="hidden" name="sn0" id="sn0" value="<?php echo $result['id']?>" />
                                                 <input type="hidden" id="classname" name="classname" value="<?php echo $result['shared_by'] . '_' . $result['class_names'];?>" />
                                                 <input type="hidden" id="class_shared0" name="class_shared0" value="<?php echo $result['class_names'];?>" />
-                                                <td align="center">
-                                                    <button id="viewclassmember" name="viewclassmembers" class="btn btn-success"><span class="far fa-eye"></span></button>
-                                                    <button id="undoshare" name="undoshare" class="btn btn-danger"><span class="fas fa-minus-circle"></span></button>
+                                                <td>
+                                                    <button class="btt" id="viewclassmember" name="viewclassmembers">
+                                                        <span class="fa fa-eye"></span>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btt" id="undoshare" name="undoshare">
+                                                        <span class="fas fa-minus-circle"></span>
+                                                    </button>
                                                 </td>
                                             </form>
                                         </tr>
