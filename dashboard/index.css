@@ -18,15 +18,30 @@ body {
 .cont {
     height: 75vh;
     overflow-x: hidden;
+    font-size: 15px;
+    text-shadow: 1px 1px 1px black;
 }
 
-.btn-success, .btn-danger {
-    width: 10px;
-    height: 5px;
-}
-
-.fa-minus-circle {
+.fa-minus-circle, .fa-trash-alt {
     color: #dc3545;
+    
+}
+
+.fa-eye, .fa-pen, .fa-sync, .fa-share-square {
+    color: #198754;
+}
+
+.fa-eye:hover, .fa-minus-circle:hover, .fa-pen:hover, .fa-sync:hover, .fa-trash-alt:hover, .fa-share-square:hover {
+    color: #000;
+}
+
+.btt {
+    background-color: transparent; border: 0px;
+}
+
+.ttrr:hover {
+    font-size: 1em;
+    font-weight: bolder;
 }
 
 #Individuals {

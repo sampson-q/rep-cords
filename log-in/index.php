@@ -31,9 +31,9 @@
             <div style="height: 30px;"></div>
             
             <div class="container-fluid">
-                <div class="col-xs-4"></div>
+                <div class="col-sm-4"></div>
                 
-                <div class="col-xs-4" style="color: white; width: 340px; font-size: 20px;" align="center">
+                <div class="col-sm-4" style="color: white; width: 340px; font-size: 20px;" align="center">
                     Login to your Account
                 </div>
             </div>
@@ -41,9 +41,9 @@
             <div style="height: 10px;"></div>
 
             <div class="container-fluid">
-                <div class="col-xs-4"></div>
+                <div class="col-sm-4"></div>
                 
-                <div class="container col-xs-4" style="box-shadow: 0px 0px 1px #ccc; height: 326px; width: 340px;">
+                <div class="container col-sm-4" style="box-shadow: 0px 0px 1px #ccc; height: 326px; width: 340px;">
                     <div style="height: 8px;"></div>
                     
                     <div>
@@ -90,9 +90,9 @@
             </div>
             <div style="height: 20px;"></div>
             <div class="container-fluid">
-                <div class="col-xs-4"></div>
+                <div class="col-sm-4"></div>
                 
-                <div class="col-xs-4" style="color: white; width: 340px;" align="center">
+                <div class="col-sm-4" style="color: white; width: 340px;" align="center">
                     <form method="post" action="">
                         <text style="color: white;">Don't have an account yet?</text> <a style="color: #337ab7; text-decoration: none;" href="../sign-up">Sign up</a>
                     </form>

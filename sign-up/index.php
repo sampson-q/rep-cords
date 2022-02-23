@@ -22,9 +22,9 @@
             <div style="height: 2px;"></div>
             
             <div class="container-fluid">
-                <div class="col-xs-4"></div>
+                <div class="col-sm-4"></div>
                 
-                <div class="col-xs-4" style="color: white; width: 520px; font-size: 20px;" align="center">
+                <div class="col-sm-4" style="color: white; width: 520px; font-size: 20px;" align="center">
                     Signup for a free Account!
                 </div>
             </div>
@@ -32,9 +32,9 @@
             <div style="height: 3px;"></div>
 
             <div class="container-fluid">
-                <div class="col-xs-4"></div>
+                <div class="col-sm-4"></div>
                 
-                <div class="container col-xs-4" style="box-shadow: 0px 0px 1px #ccc; height: 470px; width: 520px;">
+                <div class="container col-sm-4" style="box-shadow: 0px 0px 1px #ccc; height: 470px; width: 520px;">
                     <div style="height: 4px;"></div>
                     
                     <div>
@@ -51,7 +51,7 @@
                         <div style="margin-top: 15px;"></div>
                         <form role="form">
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="firstname">First Name:</label>
                                         <input type="text" class="form-control" id="firstname" placeholder="Enter firstname" name="firstname" required>
@@ -79,7 +79,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xs-6">
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="programme">Programme:</label>
                                         <input type="text" class="form-control" id="programme" name="programme" placeholder="Enter programme" required>
@@ -104,8 +104,8 @@
                             </div>
                             <div style="height: 10px;"></div>
                             <div class="row">
-                                <div class="col-xs-4"></div>
-                                <div class="col-xs-4">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-4">
                                 <input type="submit" class="form-control btn btn-primary" value="Sign Up" id="signup_button" name="signup_button"/>
                                 </div>
                             </div>
@@ -116,9 +116,9 @@
             </div>
             <div style="height: 20px;"></div>
             <div class="container-fluid">
-                <div class="col-xs-4"></div>
+                <div class="col-sm-4"></div>
                 
-                <div class="col-xs-4" style="color: white; width: 520px;" align="center">
+                <div class="col-sm-4" style="color: white; width: 520px;" align="center">
                     <text style="color: white;">Already have an account?</text> <a style="color: #4cae4c; text-decoration: none;" href="../log-in">Login</a>
                 </div>
             </div>
