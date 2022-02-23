@@ -33,24 +33,16 @@
     </head>
     <body>
         <div class="container-fluid">
-            &nbsp;<h2 style="text-shadow: 0px 0px 2px teal;">Rep-Cords.com</h2>
-
-            <div style="height: 30px;"></div>
-            
-            <div class="container-fluid">
-                <div class="col-xs-4"></div>
-                
-                <div class="col-xs-4" style="color: white; width: 340px; font-size: 20px;" align="center">
-                    Welcome to the Paper-Less Gen.
-                </div>
-            </div>
+            &nbsp;<h2 style="text-shadow: 0px 0px 2px teal;">rep-cords.com</h2>
 
             <div style="height: 10px;"></div>
 
             <div class="container-fluid">
-                <div class="col-xs-4"></div>
+            <div class="col-sm-4" style="color: white; width: 340px; font-size: 20px;" align="center">
+                    Welcome to the Paper-Less Gen.
+                </div>
                 
-                <div class="container col-xs-4" style="box-shadow: 0px 0px 1px #ccc; height: 180px; width: 340px;">
+                <div class="container col-sm-4" style="box-shadow: 0px 0px 1px #ccc; height: 180px; width: 340px;">
                     <div style="height: 8px;"></div>
                     
                     <div>

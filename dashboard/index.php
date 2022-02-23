@@ -182,8 +182,6 @@
             </div>
 
             <div style="display: none;" class="" id="ViewClassContents">
-                <input id="filter" placeholder="Search..." style="height: 30px; margin-top: -15px;" class="form-control mb-2" type="text">
-                
                 <?php
                     if (isset($_POST['viewclassmembers'])){
                         echo '<script>document.getElementById("ViewClassContents").style = "display: block;";</script>';
@@ -204,6 +202,7 @@
 
                         if ($query -> rowCount() > 0) { ?>
                             <div class="cont">
+                            <input id="filter" placeholder="Search..." style="height: 30px; margin-top: -15px;" class="form-control mb-2" type="text">
                                 <script>document.getElementById('navar').innerHTML = "<span class='h6'><?php echo $classname ?></span>";</script>
                                 <table class="table table-responsive-sm" style="color: white;">
                                     <thead class="table-dark">
